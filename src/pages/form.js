@@ -30,7 +30,7 @@ function Form() {
         setErrors(errors => ({...errors, [name]: error}))
         // console.log(errors)
         
-            setInputs(inputs => ({...inputs, [name]: value}))
+        setInputs(inputs => ({...inputs, [name]: value}))
         
      }
 
