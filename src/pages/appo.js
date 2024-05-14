@@ -16,6 +16,16 @@ import { useState } from "react";
           setCurr((curr) => (curr === 0 ? slides.length - 1 : curr - 1));
         const next = () =>
           setCurr((curr) => (curr === slides.length - 1 ? 0 : curr + 1));
+        const autoslide = true; 
+        const interval = 3000; 
+        
+        React.useEffect(() => {
+          if (autoslide) {
+            const timer = setInterval(next, interval);
+            return () => clearInterval(timer);
+          }
+          return; 
+        })
       
         return (
           <div className="Appo bg-blue-500 p-4">
@@ -42,6 +52,19 @@ import { useState } from "react";
                   <ChevronRight size={40} />
                 </button>
               </div>
+              <div className="bottom-4 absolute right-0 left-0">
+  <div className="flex justify-center items-center gap-2">
+    {slides.map((_, index) => (
+      <div
+        key={index}
+        className={`transition-all w-4 h-4 rounded-full shadow bg-white ${
+          curr === index ? "p-4" : "bg-white/80"
+        }`}
+      />
+    ))}
+  </div>
+</div>
+
             </div>
           </div>
         );
