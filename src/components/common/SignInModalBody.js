@@ -12,7 +12,8 @@ function SignInModalBody({closeModal, extraObject}){
 
     const INITIAL_REGISTER_OBJ = {
         otp : "",
-        emailId : ""
+        emailId : "",
+        password: ""
     }
 
     const {isSignIn} = extraObject
@@ -22,7 +23,7 @@ function SignInModalBody({closeModal, extraObject}){
         setLoading(false)
         setIsOtpSent(false)
         setErrorMessage("")
-        setLoginObj({otp : "", emailId : ""})
+        setLoginObj({otp : "", emailId : "", password:""})
     }, [isSignIn])
 
     
@@ -33,7 +34,7 @@ function SignInModalBody({closeModal, extraObject}){
     const [loginObj, setLoginObj] = useState(INITIAL_REGISTER_OBJ)
 
     const openSignUp = () => {
-        dispatch(openModal({title : "", size : "lg", bodyType : MODAL_BODY_TYPES.SIGN_IN_MODAL, extraObject : {isSignIn : false}}))
+        dispatch(openModal({title : "", size : "lg", bodyType : MODAL_BODY_TYPES.SIGN_UP_MODAL, extraObject : {isSignIn : false}}))
     }
 
     const openSignIn = () => {
@@ -51,6 +52,7 @@ function SignInModalBody({closeModal, extraObject}){
     const submitVerificationCode = async(e) =>{
         setErrorMessage("")
         if(loginObj.emailId.trim() === "")return setErrorMessage("Email Id is Required!")
+        if(loginObj.password.trim() === "")return setErrorMessage("password is Required!")
         if(loginObj.otp.trim() === "")return setErrorMessage("Verification Code is Required!")
         else if(!/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(loginObj.emailId.trim())){
             return setErrorMessage("Email Id is Wrong!")
@@ -89,6 +91,7 @@ const submitForm = async(e) =>{
 const sendMailOtp = async(e) =>{
     setErrorMessage("")
     if(loginObj.emailId.trim() === "")return setErrorMessage("Email Id is Required!")
+    if(loginObj.password.trim() === "")return setErrorMessage("password is Required!")
     else if(!/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(loginObj.emailId.trim())){
         return setErrorMessage("Email Id is Wrong!")
     }else{
@@ -161,13 +164,24 @@ const sendMailOtp = async(e) =>{
                                 </>
                             }
                             {
-                                !isOtpSent && 
-                                <div className={`form-control w-full mt-8`}>
+                                !isOtpSent && (
+                                    <>
+                                     <div className={`form-control w-full mt-8`}>
                                     <label className="label">
                                         <span className={"label-text text-base-content text-xs text-slate-600 "}>{"Enter your email Id"}</span>
                                     </label>
                                     <input type={"text"} value={loginObj.emailId} placeholder={"Ex- username@gmail.com"} onChange={(e) => updateFormValue({updateType : "emailId", value : e.target.value})} className="input  input-bordered input-primary w-full " />
                                 </div>
+
+                                <div className={`form-control w-full mt-2`}>
+                                    <label className="label">
+                                        <span className={"label-text text-base-content text-xs text-slate-600 "}>{"Enter your password"}</span>
+                                    </label>
+                                    <input type={"password"} value={loginObj.password} placeholder={"Ex- 1234asdf"} onChange={(e) => updateFormValue({updateType : "password", value : e.target.value})} className="input  input-bordered input-primary w-full " />
+                                </div>
+                                    </>
+                                ) 
+                               
                             }
 
                             {

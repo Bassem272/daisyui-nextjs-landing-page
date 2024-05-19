@@ -1,6 +1,7 @@
 import React from 'react'
 import Carousel from '../components/home/carousel'
 import Image from 'next/image';
+// import heavenVideo from "../../public/heavenVideo.mp4"
 import { ChevronLeft, ChevronRight } from "react-feather";
 import { useState } from "react";
  const slides = [
@@ -26,18 +27,39 @@ import { useState } from "react";
           }
           return; 
         })
-      
+        
         return (
           <div className="Appo bg-blue-500 p-4">
+        {/* <video autoPlay loop>
+  <source src="/heavenVideo.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+
+</video> */}
+  <video
+    src="/heavenVideo.mp4"
+    autoPlay
+    loop
+    muted
+    style={{
+      width: '100%',  // Match the width of the carousel container
+      height: '100%', // Match the height of the carousel container
+      objectFit: 'cover', // Maintain aspect ratio and cover the container
+    }}
+  />
             <div className="bg-red-200 max-w-lg overflow-hidden relative mx-auto">
-              <div
-                className="flex transition-transform ease-out duration-500"
-                style={{ transform: `translateX(-${curr * 100}%)` }}
-              >
-                {slides.map((s, index) => (
-                  <img key={index} src={s} alt="carousel" />
-                ))}
-              </div>
+            <div
+  className="flex transition-transform ease-out duration-500"
+  style={{ transform: `translateX(-${curr * 100}%)` }}
+>
+  {/* Render the images */}
+  {slides.map((s, index) => (
+    <img key={index} src={s} alt="carousel" />
+  ))}
+
+  {/* Render the video */}
+
+</div>
+
               <div className="absolute inset-0 flex items-center justify-between p-4">
                 <button
                   onClick={prev}
