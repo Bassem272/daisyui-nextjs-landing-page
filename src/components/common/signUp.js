@@ -2,16 +2,15 @@ import {useState, useRef, useEffect} from 'react'
 import axios from 'axios'
 import Link from 'next/link'
 import { useDispatch } from 'react-redux'
-import {  closeModal, openModal } from '@/store/modalSlice'
+import {  openModal } from '@/store/modalSlice'
 import { MODAL_BODY_TYPES } from '@/utils/globalConstantUtil'
 import { setCredits, setLoggedIn, setToken } from '@/store/userSlice'
 import analyticsUtil from '@/utils/analyticsUtil'
 import { SIGN_UP_IMAGES } from '@/utils/globalConstantUtil'
-import { ModalWrapper } from '@/components/common/ModalWrapper'
-import { useRouter } from 'next/navigation'
-function SignInModalBody({closeModal, extraObject}){
-    const router = useRouter()
 
+
+
+function SignUp({closeModal, extraObject}){
 
     const INITIAL_REGISTER_OBJ = {
         otp : "",
@@ -26,7 +25,7 @@ function SignInModalBody({closeModal, extraObject}){
         setLoading(false)
         setIsOtpSent(false)
         setErrorMessage("")
-        setLoginObj({otp : "", emailId : "", password:""})
+        setLoginObj({otp : "", emailId : "",password:""})
     }, [isSignIn])
 
     
@@ -37,9 +36,7 @@ function SignInModalBody({closeModal, extraObject}){
     const [loginObj, setLoginObj] = useState(INITIAL_REGISTER_OBJ)
 
     const openSignUp = () => {
-        // dispatch(closeModal())
-        closeModal()
-        router.push("/form")
+        dispatch(openModal({title : "", size : "lg", bodyType : MODAL_BODY_TYPES.SIGN_UP_MODAL, extraObject : {isSignIn : false}}))
     }
 
     const openSignIn = () => {
@@ -57,7 +54,7 @@ function SignInModalBody({closeModal, extraObject}){
     const submitVerificationCode = async(e) =>{
         setErrorMessage("")
         if(loginObj.emailId.trim() === "")return setErrorMessage("Email Id is Required!")
-        if(loginObj.password.trim() === "")return setErrorMessage("password is Required!")
+        if(loginObj.password.trim() === "")return setErrorMessage("Password is Required!")
         if(loginObj.otp.trim() === "")return setErrorMessage("Verification Code is Required!")
         else if(!/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(loginObj.emailId.trim())){
             return setErrorMessage("Email Id is Wrong!")
@@ -96,7 +93,6 @@ const submitForm = async(e) =>{
 const sendMailOtp = async(e) =>{
     setErrorMessage("")
     if(loginObj.emailId.trim() === "")return setErrorMessage("Email Id is Required!")
-    if(loginObj.password.trim() === "")return setErrorMessage("password is Required!")
     else if(!/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(loginObj.emailId.trim())){
         return setErrorMessage("Email Id is Wrong!")
     }else{
@@ -123,9 +119,9 @@ const sendMailOtp = async(e) =>{
     }
 
     return(
-        // <ModalWrapper isOpen={isOpen} title={isSignIn ? "Sign In" : "Sign Up"} size="lg" closeModal={closeModal}>
-
        
+
+        
         <div className=" flex items-center rounded-xl">
                 <div className='grid grid-cols-1 md:grid-cols-2 w-full '>
                     <div className='text-center rounded-xl bg-slate-100 '>
@@ -160,7 +156,8 @@ const sendMailOtp = async(e) =>{
 
                         <div className="mb-4">
                             {
-                                !isOtpSent && <p className='text-center md:mt-0 mt-6 text-xl mb-4 font-semibold'>{isSignIn ? "Sign In" : "Sign Up"}</p>
+                                !isOtpSent && <p className='text-center md:mt-0 mt-6 text-xl mb-4 font-semibold'>
+                                    {isSignIn ? "Sign In" : "Sign Up"}</p>
                             }
                             {
                                 isOtpSent && <>
@@ -172,25 +169,25 @@ const sendMailOtp = async(e) =>{
                                 </>
                             }
                             {
-                                !isOtpSent && (
+                                !isOtpSent &&  (
                                     <>
-                                     <div className={`form-control w-full mt-8`}>
+                                <div className={`form-control w-full mt-8`}>
                                     <label className="label">
                                         <span className={"label-text text-base-content text-xs text-slate-600 "}>{"Enter your email Id"}</span>
                                     </label>
-                                    <input type={"text"} value={loginObj.emailId} placeholder={"Ex- username@gmail.com"} onChange={(e) => updateFormValue({updateType : "emailId", value : e.target.value})} className="input  input-bordered input-primary w-full " />
+                                    <input type={"text"} value={loginObj.emailId} placeholder={"Ex-99sername@gmail.com"} onChange={(e) => updateFormValue({updateType : "emailId", value : e.target.value})} className="input  input-bordered input-primary w-full " />
                                 </div>
 
-                                <div className={`form-control w-full mt-2`}>
-                                    <label className="label">
-                                        <span className={"label-text text-base-content text-xs text-slate-600 "}>{"Enter your password"}</span>
-                                    </label>
-                                    <input type={"password"} value={loginObj.password} placeholder={"Ex- 1234asdf"} onChange={(e) => updateFormValue({updateType : "password", value : e.target.value})} className="input  input-bordered input-primary w-full " />
-                                </div>
-                                    </>
-                                ) 
-                               
-                            }
+                                <div className={`form-control w-full mt-8`}>
+                                <label className="label">
+                                    <span className={"label-text text-base-content text-xs text-slate-600"}>{"Enter your email Id"}</span>
+                                </label>
+                                <input type={"text"} value={loginObj.emailId} placeholder={"Ex- username@gmail.com"} onChange={(e) => updateFormValue({ updateType: "emailId", value: e.target.value })} className="input input-bordered input-primary w-full" />
+                            </div>
+                                    
+                                    
+                                    </> 
+                            )}
 
                             {
                                 isOtpSent && 
@@ -210,7 +207,7 @@ const sendMailOtp = async(e) =>{
                         <button type="submit" className={"btn mt-2 normal-case w-full btn-primary text-white  " }>{loading && <span className="loading loading-spinner"></span>}{isOtpSent ? `Verify` : `Get Verification Code`}</button>
                         
                         {
-                                isSignIn ? <div className='text-center mt-4'>{`Don't have an account yet?`}<div onClick={ openSignUp} className="ml-2 inline-block"><span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">Sign Up</span></div></div> :
+                                isSignIn ? <div className='text-center mt-4'>{`Don't have an account yet?`}<div onClick={() => openSignUp()} className="ml-2 inline-block"><span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">Sign Up</span></div></div> :
                                 <div className='text-center mt-4'>Already have an account? <div  onClick={() => openSignIn()} className="inline-block"><span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">Sign In</span></div></div>
 
                         }
@@ -219,8 +216,8 @@ const sendMailOtp = async(e) =>{
                     </div>
             </div>
         </div>
-        // </ModalWrapper>
+      
     )
 }
 
-export default SignInModalBody
+export default SignUp

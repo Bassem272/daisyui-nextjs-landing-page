@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
-
+import SignUp from '../components/common/signUp'
+import { useDispatch, useSelector} from 'react-redux';
 function Form() {
     const [inputs, setInputs] = useState({});
     const [errors , setErrors] = useState({});
@@ -49,30 +50,40 @@ function Form() {
         }
         
         console.log(errors)
+
+    
     }
-  
+      // the new part of the game let's start with it 
+        
+    const {isOpen, bodyType, size, extraObject, title} = useSelector(state => state.modal)
+    const dispatch = useDispatch()
+
+    const close = (e) => {
+      dispatch(closeModal(e))
+    }
     return (
-      <form onSubmit={handleSubmit}>
-        <label>Enter your name:
-        <input 
-          type="text" 
-          name="username" 
-          value={inputs.username || ""} 
-          onChange={handleChange}
-          />
-        {errors.username && <span style={{ color: 'red' }}>{errors.username}</span>}
-        </label>
-        <label>Enter your age:
-          <input 
-            type="number" 
-            name="age" 
-            value={inputs.age || ""} 
-            onChange={handleChange}
-            />
-            {errors.age && <span style={{ color: 'red' }}>{errors.age}</span>}
-          </label>
-          <input type="submit" className='btn'/>
-      </form>
+      // <form onSubmit={handleSubmit}>
+      //   <label>Enter your name:
+      //   <input 
+      //     type="text" 
+      //     name="username" 
+      //     value={inputs.username || ""} 
+      //     onChange={handleChange}
+      //     />
+      //   {errors.username && <span style={{ color: 'red' }}>{errors.username}</span>}
+      //   </label>
+      //   <label>Enter your age:
+      //     <input 
+      //       type="number" 
+      //       name="age" 
+      //       value={inputs.age || ""} 
+      //       onChange={handleChange}
+      //       />
+      //       {errors.age && <span style={{ color: 'red' }}>{errors.age}</span>}
+      //     </label>
+      //     <input type="submit" className='btn'/>
+      // </form>
+      <SignUp closeModal={close} extraObject={extraObject}/>
     )
 }
   

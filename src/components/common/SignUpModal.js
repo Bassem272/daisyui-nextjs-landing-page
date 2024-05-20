@@ -7,7 +7,7 @@ import { MODAL_BODY_TYPES } from '@/utils/globalConstantUtil'
 import { setCredits, setLoggedIn, setToken } from '@/store/userSlice'
 import analyticsUtil from '@/utils/analyticsUtil'
 import { SIGN_UP_IMAGES } from '@/utils/globalConstantUtil'
-
+import {ModalWrapper} from '@/components/common/ModalWrapper'
 function SignInModalBody({closeModal, extraObject}){
 
     const INITIAL_REGISTER_OBJ = {
@@ -117,6 +117,9 @@ const sendMailOtp = async(e) =>{
     }
 
     return(
+        <ModalWrapper isOpen={isOpen} title={isSignIn ? "Sign In" : "Sign Up"} size="lg" closeModal={closeModal}>
+
+        
         <div className=" flex items-center rounded-xl">
                 <div className='grid grid-cols-1 md:grid-cols-2 w-full '>
                     <div className='text-center rounded-xl bg-slate-100 '>
@@ -210,6 +213,7 @@ const sendMailOtp = async(e) =>{
                     </div>
             </div>
         </div>
+        </ModalWrapper>
     )
 }
 
