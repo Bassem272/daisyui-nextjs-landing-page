@@ -9,11 +9,10 @@ import analyticsUtil from "@/utils/analyticsUtil";
 import { SIGN_UP_IMAGES } from "@/utils/globalConstantUtil";
 import { ModalWrapper } from "@/components/common/ModalWrapper";
 import { useRouter } from "next/navigation";
-function SignUpModalBody1({ closeModal, extraObject }) {
+function SignIn2({ closeModal, extraObject }) {
   const router = useRouter();
 
   const INITIAL_REGISTER_OBJ = {
-    otp: "",
     email: "",
     password: "",
   };
@@ -25,7 +24,7 @@ function SignUpModalBody1({ closeModal, extraObject }) {
     setLoading(false);
     setIsOtpSent(false);
     setErrorMessage("");
-    setLoginObj({ otp: "", email: "", password: "" });
+    setLoginObj({ email: "", password: "" });
   }, [isSignIn]);
 
   const [loading, setLoading] = useState(false);
@@ -40,14 +39,15 @@ function SignUpModalBody1({ closeModal, extraObject }) {
   };
 
   const openSignIn = () => {
-    dispatch(
-      openModal({
-        title: "",
-        size: "lg",
-        bodyType: MODAL_BODY_TYPES.SIGN_IN_MODAL,
-        extraObject: { isSignIn: true },
-      })
-    );
+    // dispatch(
+    //   openModal({
+    //     title: "",
+    //     size: "lg",
+    //     bodyType: MODAL_BODY_TYPES.SIGN_IN_MODAL,
+    //     extraObject: { isSignIn: true  },
+    //   })
+    // );
+    router.push("/form2");
   };
 
   // useEffect(() => {
@@ -57,38 +57,38 @@ function SignUpModalBody1({ closeModal, extraObject }) {
   //    }
   // }, [loginObj.otp])
 
-  const submitVerificationCode = async (e) => {
+  const submitSingInForm = async (e) => {
     setErrorMessage("");
     if (loginObj.email.trim() === "")
       return setErrorMessage("Email Id is Required!");
     if (loginObj.password.trim() === "")
       return setErrorMessage("password is Required!");
-    if (loginObj.otp.trim() === "")
-      return setErrorMessage("Verification Code is Required!");
-    else if (
-      !/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(loginObj.email.trim())
-    ) {
-      return setErrorMessage("Email Id is Wrong!");
+    // if (loginObj.otp.trim() === "")
+    //   return setErrorMessage("Verification Code is Required!");
+    else if (!/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(loginObj.email.trim())) {
+      return setErrorMessage("Email is Wrong!");
     } else {
       setLoading(true);
       const userDatao = {
         // name: "ahmed or john",
         email: loginObj.email,
         password: loginObj.password,
-        code:loginObj.otp,
+        // code:loginObj.otp,
       };
       try {
         const response = await axios.post(
-          "http://127.0.0.1:8000/auth/verify-email/",
+          "http://127.0.0.1:8000/auth/login/",
           userDatao
         );
 
-        console.log("email verified sucess successfully:", response.data);
-        
-        if (response.data.message === "Email verified successfully") {
-          alert("Email verified successfully");
+        console.log("login successfully:", response.data);
+
+        if (response.data.message === "Authentication successful") {
+          alert("Authentication successful");
           setLoading(false);
           dispatch(setLoggedIn(true));
+          let user = response.data.payload;
+          dispatch(setToken(user.token));
           setIsOtpSent(true);
           setShowToast(true);
           console.log("email verified now");
@@ -114,111 +114,41 @@ function SignUpModalBody1({ closeModal, extraObject }) {
       // setIsOtpSent(true);
 
       // let response = await axios.post(process.env.NEXT_PUBLIC_BASE_URL+'/user/verifyMailOTP', loginObj)
-    //   if (response.data.success) {
-    //     // if(1){
-    //     let user = response.data.payload;
-    //     // let user = {name : "User", token : "Signintoken"}
-    //     localStorage.setItem("name", user.name);
-    //     dispatch(setLoggedIn(true));
-    //     dispatch(setToken(user.token));
-    //     // dispatch(setCredits(user.credits))
+      //   if (response.data.success) {
+      //     // if(1){
+      //     let user = response.data.payload;
+      //     // let user = {name : "User", token : "Signintoken"}
+      //     localStorage.setItem("name", user.name);
+      //     dispatch(setLoggedIn(true));
+      //     dispatch(setToken(user.token));
+      //     // dispatch(setCredits(user.credits))
 
-    //     //Analytics Tracking
-    //     analyticsUtil.identifyUser(user);
-    //     closeModal();
-    //   } else {
-    //     setErrorMessage(response.data.message);
-    //   }
-    //   setLoading(false);
-       }
-      };
+      //     //Analytics Tracking
+      //     analyticsUtil.identifyUser(user);
+      //     closeModal();
+      //   } else {
+      //     setErrorMessage(response.data.message);
+      //   }
+      //   setLoading(false);
+    }
+  };
 
   const submitForm = async (e) => {
     e.preventDefault();
     if (loading) return 1;
-    if (isOtpSent) {
-      submitVerificationCode();
-    } else {
-      sendMailOtp();
-    }
+    submitSingInForm();
+    // if (isOtpSent) {
+    //   submitVerificationCode();
+    // } else {
+    //   sendMailOtp();
+    // }
   };
 
-//   this is working function 
-  const sendMailOtp = async (e) => {
-    setErrorMessage("");
-    if (loginObj.email.trim() === "")
-      return setErrorMessage("Email Id is Required!");
-    if (loginObj.password.trim() === "")
-      return setErrorMessage("password is Required!");
-    else if (
-      !/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(loginObj.email.trim())
-    ) {
-      return setErrorMessage("Email Id is Wrong!");
-    } else {
-      setLoading(true);
-      // Call API to check user credentials and save token in localstorage
-      // let response = await axios.post(process.env.NEXT_PUBLIC_BASE_URL+'/user/sendMailOTP', loginObj)
-      const userData = {
-        name: "ahmed or john",
-        email: loginObj.email,
-        password: loginObj.password,
-        role: "student",
-        courses: ["history"],
-        children: ["cima", "hima"],
-      };
-      // const response = await axios.post('http://127.0.0.1:8000/auth/create_user/', userData)
-      try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/auth/create_user/",
-          userData
-        );
+  //   this is working function
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>timer >>>>>>>
+  const [showToast, setShowToast] = useState(false);
 
-        console.log("User created successfully:", response.data);
-        alert("User created successfully");
-
-        if (response.data.success) {
-          console.log("sucesss ");
-          // setLoginObj({...loginObj, otp : response.data.payload.otp+""})
-          setLoading(false);
-          setIsOtpSent(true);
-        } else {
-          setErrorMessage(response.data.message);
-        }
-      } catch (error) {
-        if (error.response) {
-          // Server responded with a status other than 2xx
-          console.error("Error response1:", error.response.data);
-          alert(error.response.data.message);
-        } else if (error.request) {
-          // Request was made but no response received
-          console.error("Error request2:", error.request);
-          alert("No response received from the server");
-        } else {
-          // Something happened in setting up the request
-          console.error("Error message3:", error.message);
-          alert("Error in setting up the request");
-        }
-      }
-      setLoading(false);
-      setIsOtpSent(true);
-      //     setLoading(false)
-
-      // setIsOtpSent(true)
-      // console.log(error.response.data.message)
-      // console.log(response.data)
-      // if(response.data.success){
-      // setLoginObj({...loginObj, otp : response.data.payload.otp+""})
-      //     setIsOtpSent(true)
-      // }else{
-      //     setErrorMessage(response.data.message)
-      // }
-      //     setLoading(false)
-    }
-  };
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>timer >>>>>>>
- const [showToast, setShowToast] = useState(false);
-
-useEffect(() => {
+  useEffect(() => {
     if (isOtpSent) {
       setShowToast(true);
 
@@ -231,12 +161,10 @@ useEffect(() => {
     }
   }, [isOtpSent]);
 
- const accept = () => {
+  const accept = () => {
     // setIsOtpSent(false);
     setShowToast(false);
-  }
- 
-
+  };
 
   const updateFormValue = ({ updateType, value }) => {
     setErrorMessage("");
@@ -244,8 +172,6 @@ useEffect(() => {
   };
 
   return (
-    // <ModalWrapper isOpen={isOpen} title={isSignIn ? "Sign In" : "Sign Up"} size="lg" closeModal={closeModal}>
-
     <div className=" flex items-center rounded-xl">
       <div className="grid grid-cols-1 md:grid-cols-2 w-full ">
         <div className="text-center rounded-xl bg-slate-100 ">
@@ -297,59 +223,10 @@ useEffect(() => {
             <div className="mb-4">
               {!isOtpSent && (
                 <p className="text-center md:mt-0 mt-6 text-xl mb-4 font-semibold">
-                  {isSignIn ? "Sign In" : "Sign Up"}
+                  {/* {isSignIn ? "Sign In" : "Sign Up"} */}Sign In Now !
                 </p>
               )}
-              {isOtpSent && (
-                <>
-                  <p className="text-center text-lg   md:mt-0 mt-6   font-semibold">
-                    Enter verification code received on {loginObj.email}
-                  </p>
-                  <p className="text-center text-slate-500 mt-2 text-sm">
-                    Didn&apos;t receive mail? Check spam folder
-                  </p>
-                </>
-              )}
-              {isOtpSent 
-              && showToast
-               && (
-                <>
-                  <div className="toast toast-end">
-                  {/* <progress className="progress w-100"></progress> */}
-                    <div className="alert alert-info flex flex-col ">
-                    <progress className="progress w-20"></progress>
-                      <span>New mail arrived.</span>
-                    </div>
-                    <div className="alert alert-success">
-                      <span>Message sent successfully.</span>
-                    </div> 
-                             <div role="alert" className="alert alert-success">
-  <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-  <span>Your purchase has been confirmed!</span>
-</div>
 
-<div role="alert" className="alert">
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-  <span>we use cookies for no reason.</span>
-  <div>
-    <button className="btn btn-sm">Deny</button>
-    <button onClick={accept} class="btn btn-sm btn-primary">Accept</button>
-  </div>
-</div>
-                  </div>
-
-                  <div role="alert" className="alert">
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-  <span>we use cookies for no reason.</span>
-  <div>
-    <button className="btn btn-sm">Deny</button>
-    <button onClick={accept} class="btn btn-sm btn-primary">Accept</button>
-  </div>
-</div>
-
-        
-                </>
-              )}
               {!isOtpSent && (
                 <>
                   <div className={`form-control w-full mt-8`}>
@@ -359,7 +236,7 @@ useEffect(() => {
                           "label-text text-base-content text-xs text-slate-600 "
                         }
                       >
-                        {"Enter your email Id"}
+                        {"Enter your emailana Hi "}
                       </span>
                     </label>
                     <input
@@ -401,32 +278,6 @@ useEffect(() => {
                   </div>
                 </>
               )}
-
-              {isOtpSent && (
-                <div className={`form-control w-full mt-8`}>
-                  <label className="label">
-                    <span
-                      className={
-                        "label-text text-base-content text-xs text-slate-600"
-                      }
-                    >
-                      {"Verification Code"}
-                    </span>
-                  </label>
-                  <input
-                    type={"otp"}
-                    value={loginObj.otp}
-                    placeholder={"Ex- 123456"}
-                    onChange={(e) =>
-                      updateFormValue({
-                        updateType: "otp",
-                        value: e.target.value,
-                      })
-                    }
-                    className="input  input-bordered input-primary w-full "
-                  />
-                </div>
-              )}
             </div>
 
             <div className={`${isSignIn ? "mt-6" : "mt-6"} text-rose-500`}>
@@ -440,7 +291,7 @@ useEffect(() => {
               className={"btn mt-2 normal-case w-full btn-primary text-white  "}
             >
               {loading && <span className="loading loading-spinner"></span>}
-              {isOtpSent ? `Verify` : `Get Verification Code`}
+              {/* {isOtpSent ? `Verify` : `Get Verification Code`} */}
             </button>
 
             {isSignIn ? (
@@ -448,7 +299,7 @@ useEffect(() => {
                 {`Don't have an account yet?`}
                 <div onClick={openSignUp} className="ml-2 inline-block">
                   <span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">
-                    Sign Up
+                    Sign In
                   </span>
                 </div>
               </div>
@@ -470,4 +321,4 @@ useEffect(() => {
   );
 }
 
-export default SignUpModalBody1;
+export default SignIn2;

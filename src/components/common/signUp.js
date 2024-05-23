@@ -7,7 +7,7 @@ import { MODAL_BODY_TYPES } from '@/utils/globalConstantUtil'
 import { setCredits, setLoggedIn, setToken } from '@/store/userSlice'
 import analyticsUtil from '@/utils/analyticsUtil'
 import { SIGN_UP_IMAGES } from '@/utils/globalConstantUtil'
-
+import { registerUser } from '../../store/userSlice'
 
 
 function SignUp({closeModal, extraObject}){
@@ -90,6 +90,32 @@ const submitForm = async(e) =>{
     }
 }
 
+const submitForm132 = (e) => {
+    e.preventDefault();
+   const formDatao = {
+        name : "ahmed or john",
+        email : loginObj.emailId,
+        password : loginObj.password,
+        role:"student",
+        courses:["history"],
+        children:["cima","hima"]
+       
+    }
+    console.log('we are here ')
+    dispatch(registerUser(formDatao))
+        .unwrap()
+        .then((response) => {
+            // Handle successful registration
+            console.log('Registration successful!', response);
+            // Optionally, redirect or show a success message
+        })
+        .catch((error) => {
+            // Handle registration failure
+            console.error('Registration failed!', error);
+            // Optionally, show an error message
+        });
+};
+
 const sendMailOtp = async(e) =>{
     setErrorMessage("")
     if(loginObj.emailId.trim() === "")return setErrorMessage("Email Id is Required!")
@@ -98,7 +124,7 @@ const sendMailOtp = async(e) =>{
     }else{
         setLoading(true)
         // Call API to check user credentials and save token in localstorage
-        // let response = await axios.post(process.env.NEXT_PUBLIC_BASE_URL+'/user/sendMailOTP', loginObj)
+        const response = await axios.post('http://127.0.0.1:8000/auth/create_user/', userData)
         setLoading(false)
         setIsOtpSent(true)
 

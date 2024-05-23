@@ -2,9 +2,9 @@ import React from 'react'
 import { useState } from 'react'
 import SignUp from '../components/common/signUp'
 // import SignInModalBody from '@/components/common/SignInModalBody';
-import SignUpModalBody1 from '../components/common/SignInModalBody';
+import SignIn2 from '../components/common/signIn2';
 import { useDispatch, useSelector} from 'react-redux';
-function Form() {
+function Form2() {
     const [inputs, setInputs] = useState({});
     const [errors , setErrors] = useState({});
 
@@ -86,9 +86,9 @@ function Form() {
       //     <input type="submit" className='btn'/>
       // </form>
     //   <SignUp closeModal={close} extraObject={extraObject}/>
-    <SignUpModalBody1 closeModal={close} extraObject={extraObject}/>
+    <SignIn2 closeModal={close} extraObject={extraObject}/>
     
     )
 }
   
-export default Form
+export default Form2

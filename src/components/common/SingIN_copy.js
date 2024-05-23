@@ -9,7 +9,7 @@ import analyticsUtil from "@/utils/analyticsUtil";
 import { SIGN_UP_IMAGES } from "@/utils/globalConstantUtil";
 import { ModalWrapper } from "@/components/common/ModalWrapper";
 import { useRouter } from "next/navigation";
-function SignUpModalBody1({ closeModal, extraObject }) {
+function SignInModalBody({ closeModal, extraObject }) {
   const router = useRouter();
 
   const INITIAL_REGISTER_OBJ = {
@@ -470,4 +470,4 @@ useEffect(() => {
   );
 }
 
-export default SignUpModalBody1;
+export default SignInModalBody;
