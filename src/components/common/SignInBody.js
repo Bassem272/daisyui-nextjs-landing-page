@@ -9,15 +9,17 @@ import analyticsUtil from "@/utils/analyticsUtil";
 import { SIGN_UP_IMAGES } from "@/utils/globalConstantUtil";
 import { ModalWrapper } from "@/components/common/ModalWrapper";
 import { useRouter } from "next/navigation";
-function SignIn2({ closeModal, extraObject }) {
-  const router = useRouter();
 
+function SignInBody({ closeModal, extraObject }) {
+  
+  const router = useRouter();
   const INITIAL_REGISTER_OBJ = {
     email: "",
     password: "",
   };
 
   const { isSignIn } = extraObject;
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,20 +36,20 @@ function SignIn2({ closeModal, extraObject }) {
 
   const openSignUp = () => {
     // dispatch(closeModal())
-    closeModal();
-    router.push("/form");
+    // closeModal();
+    router.push("/sign-up");
   };
 
   const openSignIn = () => {
-    // dispatch(
-    //   openModal({
-    //     title: "",
-    //     size: "lg",
-    //     bodyType: MODAL_BODY_TYPES.SIGN_IN_MODAL,
-    //     extraObject: { isSignIn: true  },
-    //   })
-    // );
-    router.push("/form2");
+    dispatch(
+      openModal({
+        title: "",
+        size: "lg",
+        bodyType: MODAL_BODY_TYPES.SIGN_IN_MODAL,
+        extraObject: { isSignIn: true  },
+      })
+    );
+    router.push("/sign-in");
   };
 
   // useEffect(() => {
@@ -87,8 +89,10 @@ function SignIn2({ closeModal, extraObject }) {
           alert("Authentication successful");
           setLoading(false);
           dispatch(setLoggedIn(true));
-          let user = response.data.payload;
-          dispatch(setToken(user.token));
+          
+          console.log(response.data.token)
+          
+          dispatch(setToken(response.data.token));
           setIsOtpSent(true);
           setShowToast(true);
           console.log("email verified now");
@@ -181,7 +185,10 @@ function SignIn2({ closeModal, extraObject }) {
                 className="mask inline-block mr-2 mask-circle w-10"
                 src="/android-chrome-192x192.png"
               />{" "}
-              Web Design AI
+              Web Design AI bassem 
+              sdffsd    
+
+                      
             </span>
             <div className="carousel   mt-6 w-full">
               {SIGN_UP_IMAGES.map((img, k) => {
@@ -223,7 +230,8 @@ function SignIn2({ closeModal, extraObject }) {
             <div className="mb-4">
               {!isOtpSent && (
                 <p className="text-center md:mt-0 mt-6 text-xl mb-4 font-semibold">
-                  {/* {isSignIn ? "Sign In" : "Sign Up"} */}Sign In Now !
+                  {/* {isSignIn ? "Sign In" : "Sign Up"} */}
+                  Sign In Now  !
                 </p>
               )}
 
@@ -236,7 +244,7 @@ function SignIn2({ closeModal, extraObject }) {
                           "label-text text-base-content text-xs text-slate-600 "
                         }
                       >
-                        {"Enter your emailana Hi "}
+                        {"Enter your email please! "}
                       </span>
                     </label>
                     <input
@@ -292,27 +300,18 @@ function SignIn2({ closeModal, extraObject }) {
             >
               {loading && <span className="loading loading-spinner"></span>}
               {/* {isOtpSent ? `Verify` : `Get Verification Code`} */}
+              Log in 
             </button>
 
-            {isSignIn ? (
               <div className="text-center mt-4">
                 {`Don't have an account yet?`}
                 <div onClick={openSignUp} className="ml-2 inline-block">
                   <span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">
-                    Sign In
+                    Sign Up
                   </span>
                 </div>
               </div>
-            ) : (
-              <div className="text-center mt-4">
-                Already have an account?{" "}
-                <div onClick={() => openSignIn()} className="inline-block">
-                  <span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">
-                    Sign In
-                  </span>
-                </div>
-              </div>
-            )}
+            
           </form>
         </div>
       </div>
@@ -321,4 +320,4 @@ function SignIn2({ closeModal, extraObject }) {
   );
 }
 
-export default SignIn2;
+export default SignInBody;

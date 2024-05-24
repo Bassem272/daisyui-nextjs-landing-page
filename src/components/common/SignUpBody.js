@@ -9,9 +9,10 @@ import analyticsUtil from "@/utils/analyticsUtil";
 import { SIGN_UP_IMAGES } from "@/utils/globalConstantUtil";
 import { ModalWrapper } from "@/components/common/ModalWrapper";
 import { useRouter } from "next/navigation";
-function SignUpModalBody1({ closeModal, extraObject }) {
-  const router = useRouter();
 
+function SignUpBody({ closeModal, extraObject }) {
+  
+  const router = useRouter();
   const INITIAL_REGISTER_OBJ = {
     otp: "",
     email: "",
@@ -36,18 +37,19 @@ function SignUpModalBody1({ closeModal, extraObject }) {
   const openSignUp = () => {
     // dispatch(closeModal())
     closeModal();
-    router.push("/form");
+    router.push("/sign-up");
   };
 
   const openSignIn = () => {
-    dispatch(
-      openModal({
-        title: "",
-        size: "lg",
-        bodyType: MODAL_BODY_TYPES.SIGN_IN_MODAL,
-        extraObject: { isSignIn: true },
-      })
-    );
+    // dispatch(
+    //   openModal({
+    //     title: "",
+    //     size: "lg",
+    //     bodyType: MODAL_BODY_TYPES.SIGN_IN_MODAL,
+    //     extraObject: { isSignIn: true },
+    //   })
+    // );
+    router.push("/sign-in");
   };
 
   // useEffect(() => {
@@ -92,6 +94,7 @@ function SignUpModalBody1({ closeModal, extraObject }) {
           setIsOtpSent(true);
           setShowToast(true);
           console.log("email verified now");
+          dispatch(closeModal())
         } else {
           setErrorMessage(response.data.message);
         }
@@ -470,4 +473,4 @@ useEffect(() => {
   );
 }
 
-export default SignUpModalBody1;
+export default SignUpBody;
