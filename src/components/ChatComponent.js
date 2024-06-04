@@ -45,29 +45,60 @@ const Chat = ({ grade }) => {
 
       <div className="messages">
         {inputs.message && (
+          <div>
           <div className="avatar-group rtl:space-x-reverse flex space-x-2 p-3">
             <div className="avatar">
               <div className="w-12">
                 <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="Avatar" />
               </div>
             </div>
+
             <div className="chat chat-start">
-              <div className="chat-bubble chat-bubble-success">{inputs.message}</div>
+              <div className="chat-bubble chat-bubble-success">
+               <div className="bg-blue-300 w-1/2  text-wrap whitespace-pre-line "> {inputs.message} </div>
+                <div className="chat-footer">You</div>
+                </div>
             </div>
-          </div>
+          </div> 
+          
+     </div>
         )}
          {messages.map((msg, index) => (
           <div key={index} className="avatar-group rtl:space-x-reverse flex space-x-2 p-5 bg-blue-100 w-1/2 ml-auto mr-auto">
+            <div >
             <div className="avatar">
               <div className="w-12">
                 <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="Avatar" />
               </div>
             </div>
-            <div className="chat chat-start">
-              <div className="chat-bubble chat-bubble-success text-wrap text-left" >{msg}</div>
             </div>
+
+            <div className="chat chat-start text-wrap text-left overflow-y-auto">
+              <div className="chat-bubble chat-bubble-success whitespace-normal break-words" >{msg}</div>
+            </div>
+
           </div>
         ))}
+
+
+        {messages.map((msg, index) => (
+  <div key={index} className="avatar-group rtl:space-x-reverse flex space-x-2 p-5 bg-blue-100 w-1/2 ml-auto mr-auto">
+    <div>
+      <div className="avatar">
+        <div className="w-12">
+          <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="Avatar" />
+        </div>
+      </div>
+    </div>
+
+    <div className="chat chat-start text-wrap text-left overflow-y-auto">
+      <div className="chat-bubble chat-bubble-success whitespace-normal" style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{msg}</div>
+    </div>
+
+  </div>
+))}
+
+              {/* { this is the part of the input 7777777777777777777} */}
          <div className="flex space-x-2 p-3 w-1/2 mr-auto ml-auto">
         <form onSubmit={handleSubmit} className="flex space-x-2 p-3 bg-slate-400 w-full">
           <input
