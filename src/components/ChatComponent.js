@@ -59,7 +59,7 @@ useEffect(() => {
 
             <div className="chat chat-start text-wrap text-left overflow-y-auto resize rounded-md">
               <div className="chat-bubble chat-bubble-success whitespace-normal break-words select-text">
-                {msg.content}
+                {msg}
               </div>
             </div>
 
