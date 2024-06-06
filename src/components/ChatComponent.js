@@ -1,9 +1,10 @@
+// components/home/ChatComponent.js
 import { useState , useEffect} from "react";
 import ChatState from "../services/chatService";
 
 const Chat = ({ grade }) => {
-  // const { messages, sendMessage } = ChatState({ grade });
-  // const [newMessage, setNewMessage] = useState("");
+  const { messages, sendMessage } = ChatState({ grade });
+  const [newMessage, setNewMessage] = useState("");
 
   // const handleClick = () => {
   //   sendMessage(newMessage);
@@ -11,7 +12,7 @@ const Chat = ({ grade }) => {
   // };
 
   const [inputs, setInputs] = useState({ message: "" });
-  const [messages, setMessages] = useState([]);
+  // const [messages, setMessages] = useState([]);
   function handleChange(event) {
     const { name, value } = event.target;
     setInputs((values) => ({ ...values, [name]: value }));
@@ -25,13 +26,13 @@ useEffect(() => {
     event.preventDefault();
     const message = inputs.message.trim();
     if (message) {
+      sendMessage( message);
       setInputs((values) => ({ ...values, message: "" })); // Clear the input field after submission
-      setMessages((prevMessages) => [...prevMessages, message]);
     }
   }
 
   return (
-    <div className=" bg-red-600 h-auto">
+    <div className=" bg-red-50 h-auto">
 
       <div className="messages relative bg-green-300 w-4/6
        mx-auto p-5 h-96 overflow-auto resize 
@@ -43,7 +44,7 @@ useEffect(() => {
           <div
             key={index}
             className="avatar-group rtl:space-x-reverse flex space-x-1 p-5
-           bg-blue-100 w-5/6 h-2/8 ml-auto mr-auto   "
+           bg-blue-50 w-5/6 h-2/8 ml-auto mr-auto   "
           >
             <div>
               <div className="avatar">
@@ -58,7 +59,7 @@ useEffect(() => {
 
             <div className="chat chat-start text-wrap text-left overflow-y-auto resize rounded-md">
               <div className="chat-bubble chat-bubble-success whitespace-normal break-words select-text">
-                {msg}
+                {msg.content}
               </div>
             </div>
 
@@ -70,7 +71,7 @@ useEffect(() => {
       <div className="flex space-x-2 p-3 w-1/2   inset-x-0 bottom-0 mx-auto resize rounded-md">
         <form
           onSubmit={handleSubmit}
-          className="flex space-x-2 p-3 bg-slate-400 w-full resize rounded-md"
+          className="flex space-x-2 p-3 bg-green-50 w-full resize rounded-md"
         >
           <input
             type="text"
