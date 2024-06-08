@@ -265,9 +265,10 @@ const ChatState = ({ grade }) => {
     };
 
     socket.onmessage = (event) => {
+
       const data = JSON.parse(event.data);
       console.log("Received message:", data);
-      const { content, email, time, avatar_url, name, message_id } = data;
+      const { content, email, time, avatar_url, name, message_id } = data.message;
 
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -301,18 +302,19 @@ const ChatState = ({ grade }) => {
       email: "bassem@gmail.com",
       avatar_url: "https://example.com/avatar.jpg",
     };
-    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-            socketRef.current.send(
-              JSON.stringify( messageData )
-            );
-      
-            console.log(
-              "we send a message form nextjs to >django>>> but from sendMessage function >< ~ ~ he :",
-              messageData
-            );
-          }
+ 
 
     try {
+      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+        socketRef.current.send(
+          JSON.stringify( messageData )
+        );
+  
+        console.log(
+          "we send a message form nextjs to >django>>> but from sendMessage function >< ~ ~ he :",
+          messageData
+        );
+      }
       // Save the message to the database
       const response = await axios.post(
         "http://localhost:8000/chat/create_message/",
@@ -321,12 +323,12 @@ const ChatState = ({ grade }) => {
 
       console.log("Message saved to the database:", response.data);
 
-      // Send the message via WebSocket
-      if (socketRef.current.readyState === WebSocket.OPEN) {
-        socketRef.current.send(JSON.stringify(messageData));
-      } else {
-        console.error("WebSocket not open.");
-      }
+      // // Send the message via WebSocket
+      // if (socketRef.current.readyState === WebSocket.OPEN) {
+      //   socketRef.current.send(JSON.stringify(messageData));
+      // } else {
+      //   console.error("WebSocket not open.");
+      // }
     } catch (error) {
       console.error("Error saving or sending message:", error);
     }
