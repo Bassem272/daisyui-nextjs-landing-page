@@ -27,7 +27,9 @@ useEffect(() => {
     const message = inputs.message.trim();
     if (message) {
       sendMessage( message);
-      setInputs((values) => ({ ...values, message: "" })); // Clear the input field after submission
+     
+      setInputs((values) => ({ ...values, message: "" })) // Clear the input field after submission
+      
     }
   }
 
@@ -40,7 +42,7 @@ useEffect(() => {
        will-change-scroll scrollbar-hidden">
         first relative parent
 
-        {messages.map((msg, index) => (
+        {/* {messages.map((msg, index) => (
           <div
             key={index}
             className="avatar-group rtl:space-x-reverse flex space-x-1 p-5
@@ -59,10 +61,35 @@ useEffect(() => {
 
             <div className="chat chat-start text-wrap text-left overflow-y-auto resize rounded-md">
               <div className="chat-bubble chat-bubble-success whitespace-normal break-words select-text">
-                {msg}
+                {msg.content}
               </div>
             </div>
 
+          </div>
+        ))} */}
+
+        {/* -------------------------------------------------- */}
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className="avatar-group rtl:space-x-reverse flex space-x-1 p-5 bg-blue-50 w-5/6 h-2/8 ml-auto mr-auto"
+          >
+            <div>
+              <div className="avatar">
+                <div className="w-12">
+                  <img src={msg.avatar_url} alt="Avatar" />
+                </div>
+              </div>
+            </div>
+
+            <div className="chat chat-start text-wrap text-left overflow-y-auto resize rounded-md">
+              <div className="chat-bubble chat-bubble-success whitespace-normal break-words select-text">
+                <div>
+                  <strong>{msg.name}</strong> <span>({msg.time})</span>
+                </div>
+                <div>{msg.content}</div>
+              </div>
+            </div>
           </div>
         ))}
       </div>
