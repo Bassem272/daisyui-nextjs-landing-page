@@ -1,0 +1,32 @@
+{
+    "name": "TaaSis",
+    "short_name": "TaaSis",
+    "start_url": "/",
+    "display": "browser",
+    "background_color": "#ffffff",
+    "theme_color": "#4285F4",
+    "description": "A website dedicated to teaching and providing educational materials to students for free, with potential paid services. Offering programming language courses for children, young adults, and adults, as well as language learning courses. Featuring articles on various topics beneficial for students, teachers, and knowledge seekers.",
+    "icons": [
+      {
+        "src": "/android-chrome-192x192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/android-chrome-512x512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      },
+      {
+        "src": "/apple-touch-icon.png",
+        "type": "image/png",
+        "sizes": "180x180"
+      },
+      {
+        "src": "/favicon.ico",
+        "type": "image/x-icon",
+        "sizes": "64x64 32x32 24x24 16x16"
+      }
+    ]
+  }
+  

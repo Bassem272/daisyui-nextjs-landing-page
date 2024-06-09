@@ -1,0 +1,25 @@
+/* Chat.module.css */
+.avatar {
+    width: 3rem;  /* Fixed width */
+    height: 3rem; /* Fixed height */
+    flex-shrink: 0; /* Prevent the avatar from shrinking */
+  }
+  
+  .message-block {
+    display: flex;
+    align-items: flex-start; /* Align items to the start to keep the avatar at the top */
+    gap: 0.5rem; /* Space between avatar and chat bubble */
+  }
+  
+  .chat-bubble {
+    /* word-wrap: break-word; Wrap long words */
+    /* white-space: pre-wrap; Preserve whitespace and wrap long lines */
+    /* max-width: 100%; Ensure the chat bubble doesn't exceed its container width */
+  }
+  
+  .chat-bubble-success {
+    padding: 0.5rem 1rem; /* Add padding to the chat bubble */
+    border-radius: 0.5rem; /* Rounded corners for the chat bubble */
+    background-color: #d1f5d3; /* Background color for the success chat bubble */
+  }
+  

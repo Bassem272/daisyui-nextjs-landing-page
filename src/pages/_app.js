@@ -1,3 +1,4 @@
+// ./src/pages/_app.js
 import Layout from '@/containers/Layout'
 import '@/styles/globals.css'
 import { useEffect } from 'react'

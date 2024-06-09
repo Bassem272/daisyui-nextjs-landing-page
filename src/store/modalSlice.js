@@ -1,3 +1,4 @@
+// src/store/modalSlice.js 
 import { createSlice } from '@reduxjs/toolkit'
 
 export const modalSlice = createSlice({
