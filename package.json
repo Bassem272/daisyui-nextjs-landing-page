@@ -46,7 +46,8 @@
     "socket.io-client": "^4.7.5",
     "theme-change": "^2.3.0",
     "websocket": "^1.0.35",
-    "websocket-extensions": "^0.1.4"
+    "websocket-extensions": "^0.1.4",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",

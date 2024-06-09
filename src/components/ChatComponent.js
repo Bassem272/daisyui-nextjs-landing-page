@@ -1,10 +1,20 @@
 // components/home/ChatComponent.js
 import { useState , useEffect} from "react";
 import ChatState from "../services/chatService";
+import { useSelector , useDispatch } from "react-redux";
+import { fetchUserDetail , setGrade } from "@/store/userSlice";
 
 const Chat = ({ grade }) => {
   const { messages, sendMessage } = ChatState({ grade });
   const [newMessage, setNewMessage] = useState("");
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user.user);
+  const { name, avatar_url, email, user_id } = user;
+  useEffect(() => {
+    dispatch(fetchUserDetail());
+    dispatch(setGrade(grade));
+  })
 
   // const handleClick = () => {
   //   sendMessage(newMessage);
@@ -83,7 +93,7 @@ useEffect(() => {
             </div>
 
             <div className="chat chat-start text-wrap text-left overflow-y-auto resize rounded-md">
-              <div className="chat-bubble chat-bubble-success whitespace-normal break-words select-text">
+              <div className="chat-bubble chat-bubble-accent whitespace-normal break-words select-text">
                 <div>
                   <strong>{msg.name}</strong> <span>({msg.time})</span>
                 </div>

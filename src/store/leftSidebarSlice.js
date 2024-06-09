@@ -1,3 +1,4 @@
+// src/store/leftSidebarSlice.js
 import { createSlice } from '@reduxjs/toolkit'
 
 export const leftSidebarSlice = createSlice({
