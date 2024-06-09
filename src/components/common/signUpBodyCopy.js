@@ -18,11 +18,11 @@ function SignUpBody({ closeModal, extraObject }) {
     otp: "",
     email: "",
     password: "",
-
     name: '',
     mobile: '',
     confirmPassword: '',
     grade: '',
+    role:'',
   };
 
   const validationSchema = Yup.object({
@@ -34,6 +34,7 @@ function SignUpBody({ closeModal, extraObject }) {
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('Confirm Password is required'),
     grade: Yup.string().required('Grade is required'),
+    role: Yup.string().required('Role is required'),
   });
 
   const { isSignIn } = extraObject;
@@ -52,20 +53,13 @@ function SignUpBody({ closeModal, extraObject }) {
   const [loginObj, setLoginObj] = useState(INITIAL_REGISTER_OBJ);
 
   const openSignUp = () => {
-    // dispatch(closeModal())
+  
     closeModal();
     router.push("/sign-up");
   };
 
   const openSignIn = () => {
-    // dispatch(
-    //   openModal({
-    //     title: "",
-    //     size: "lg",
-    //     bodyType: MODAL_BODY_TYPES.SIGN_IN_MODAL,
-    //     extraObject: { isSignIn: true },
-    //   })
-    // );
+ 
     router.push("/sign-in");
   };
 
@@ -99,6 +93,7 @@ function SignUpBody({ closeModal, extraObject }) {
         mobile:loginObj.mobile,
         grade:loginObj.grade,
         code:loginObj.otp,
+        role:loginObj.role,
       };
       try {
         const response = await axios.post(
@@ -169,84 +164,61 @@ function SignUpBody({ closeModal, extraObject }) {
   };
 
 //   this is working function 
-  const sendMailOtp = async (e) => {
+const sendMailOtp = async (e) => {
     setErrorMessage("");
     try {
-    await validationSchema.validate(loginObj, { abortEarly: false });
- 
-
-      
+      await validationSchema.validate(loginObj, { abortEarly: false });
+  
       setLoading(true);
-
-      // Call API to check user credentials and save token in localstorage
-      // let response = await axios.post(process.env.NEXT_PUBLIC_BASE_URL+'/user/sendMailOTP', loginObj)
+  
       const userData = {
         name: loginObj.name,
         email: loginObj.email,
         password: loginObj.password,
-        grade:loginObj.grade,
+        grade: loginObj.grade,
         mobile: loginObj.mobile,
         role: "student",
         courses: [],
         children: [],
       };
-      // const response = await axios.post('http://127.0.0.1:8000/auth/create_user/', userData)
-        const response = await axios.post(
-          "http://127.0.0.1:8000/auth/create_user/",
-          userData
-        );
-
-        console.log("User created successfully:", response.data);
-        alert("User created successfully");
-
-        if (response.data.success) {
-          console.log("sucesss ");
-          // setLoginObj({...loginObj, otp : response.data.payload.otp+""})
-          setLoading(false);
-          setIsOtpSent(true);
-        } else {
-          setErrorMessage(response.data.message);
-        }
-      } catch (error) {
-        if (error.name === 'ValidationError') {
-          const newErrors = {};
-          error.inner.forEach((err) => {
-            newErrors[err.path] = err.message;
-          });
-          setErrors(newErrors);
-        } else {
-          console.error('Error registering user:', error);
+  
+      const response = await axios.post("http://127.0.0.1:8000/auth/create_user/", userData);
+  
+      console.log("User created successfully:", response.data);
+      alert("User created successfully");
+  
+      if (response.data.success) {
+        console.log("Success");
+        setIsOtpSent(true);
+      } else {
+        setErrorMessage(response.data.message);
+      }
+    } catch (error) {
+      if (error.name === 'ValidationError') {
+        console.error('Validation errors:', error.inner);
+        const newErrors = {};
+        error.inner.forEach((err) => {
+          newErrors[err.path] = err.message;
+        });
+        setErrors(newErrors);
+      } else {
+        console.error('Error registering user:', error);
         if (error.response) {
-          // Server responded with a status other than 2xx
-        console.error("Error response1:", error.response.data);
-      alert(error.response.data.message);
-    } else if (error.request) {
-      // Request was made but no response received
-    console.error("Error request2:", error.request);
-  alert("No response received from the server");
-} else {
-  // Something happened in setting up the request
-console.error("Error message3:", error.message);
-alert("Error in setting up the request");
-}
-}
-}
+          console.error("Error response:", error.response.data);
+          alert(error.response.data.message);
+        } else if (error.request) {
+          console.error("Error request:", error.request);
+          alert("No response received from the server");
+        } else {
+          console.error("Error message:", error.message);
+          alert("Error in setting up the request");
+        }
+      }
+    } finally {
       setLoading(false);
-      setIsOtpSent(true);
-      //     setLoading(false)
-
-      // setIsOtpSent(true)
-      // console.log(error.response.data.message)
-      // console.log(response.data)
-      // if(response.data.success){
-      // setLoginObj({...loginObj, otp : response.data.payload.otp+""})
-      //     setIsOtpSent(true)
-      // }else{
-      //     setErrorMessage(response.data.message)
-      // }
-      //     setLoading(false)
-    
+    }
   };
+  
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>timer >>>>>>>
  const [showToast, setShowToast] = useState(false);
 
