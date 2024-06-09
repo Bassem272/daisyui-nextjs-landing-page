@@ -2,6 +2,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
+
+// thunk for user registration
+export const registerUser = createAsyncThunk(
+    'user/register',
+    async (userData) =>{
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/auth/create_user/', userData)
+            return response.data.payload
+        }catch (error) {
+            throw new Error(error.response.data.message)
+        }
+    }
+)
+
 // export const fetchUserDetail = createAsyncThunk('/user/profile', async () => {
 // 	const response = await axios.get(process.env.NEXT_PUBLIC_BASE_URL+'/user/profile')
 // 	return response.data.payload;
@@ -53,6 +68,7 @@ export const headerSlice = createSlice({
         axios.defaults.headers.common["Authorization"] = null;
       }
     },
+
 
     setCredits: (state, action) => {
       state.credits = action.payload;
@@ -106,6 +122,8 @@ export const headerSlice = createSlice({
     },
   },
 
+
+
   extraReducers: {
     [fetchUserDetail.pending]: (state) => {
       state.isLoading = true;
@@ -141,6 +159,7 @@ export const headerSlice = createSlice({
     },
   },
 });
+
 
 // export const { setLoggedIn, setToken, setCredits, setScrollId, updateCredits } = headerSlice.actions
 export const {

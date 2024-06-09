@@ -3,6 +3,7 @@ module.exports = Object.freeze({
     MODAL_BODY_TYPES : {
         USER_DETAIL : "USER_DETAIL",
         SIGN_IN_MODAL : "SIGN_IN_MODAL",
+        SIGN_UP_MODAL : "SIGN_UP_MODAL",
         PRICING_MODAL : "PRICING_MODAL",
         DEFAULT : "",
     },

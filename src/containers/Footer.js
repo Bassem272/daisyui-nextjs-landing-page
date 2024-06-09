@@ -7,7 +7,7 @@ function Footer() {
         <div className="bg-slate-50 flex justify-center">
             <footer className="footer pt-10 pb-24 px-4 max-w-6xl  text-base-content">
         <div>
-            <p className="font-bold text-2xl">Web Design AI<br/></p>
+            <p className="font-bold text-2xl">TaaSis<br/></p>
        </div> 
   <div>
     <span className="footer-title">Information</span> 

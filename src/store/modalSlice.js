@@ -21,10 +21,11 @@ export const modalSlice = createSlice({
             state.extraObject = extraObject
         },
 
-        closeModal: (state, action) => {
+        closeModal: (state) => {
             state.isOpen = false
-            state.bodyType = ""
-            state.title = ""
+            state.bodyType = null
+            state.size = ''
+            state.title = ''
             state.extraObject = {}
         },
 
