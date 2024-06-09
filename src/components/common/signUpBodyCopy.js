@@ -167,56 +167,80 @@ function SignUpBody({ closeModal, extraObject }) {
 const sendMailOtp = async (e) => {
     setErrorMessage("");
     try {
-      await validationSchema.validate(loginObj, { abortEarly: false });
-  
+    await validationSchema.validate(loginObj, { abortEarly: false });
+ 
+
+      
       setLoading(true);
-  
+
+      // Call API to check user credentials and save token in localstorage
+      // let response = await axios.post(process.env.NEXT_PUBLIC_BASE_URL+'/user/sendMailOTP', loginObj)
       const userData = {
         name: loginObj.name,
         email: loginObj.email,
         password: loginObj.password,
-        grade: loginObj.grade,
+        grade:loginObj.grade,
         mobile: loginObj.mobile,
         role: "student",
         courses: [],
         children: [],
       };
-  
-      const response = await axios.post("http://127.0.0.1:8000/auth/create_user/", userData);
-  
-      console.log("User created successfully:", response.data);
-      alert("User created successfully");
-  
-      if (response.data.success) {
-        console.log("Success");
-        setIsOtpSent(true);
-      } else {
-        setErrorMessage(response.data.message);
-      }
-    } catch (error) {
-      if (error.name === 'ValidationError') {
-        console.error('Validation errors:', error.inner);
-        const newErrors = {};
-        error.inner.forEach((err) => {
-          newErrors[err.path] = err.message;
-        });
-        setErrors(newErrors);
-      } else {
-        console.error('Error registering user:', error);
-        if (error.response) {
-          console.error("Error response:", error.response.data);
-          alert(error.response.data.message);
-        } else if (error.request) {
-          console.error("Error request:", error.request);
-          alert("No response received from the server");
+      // const response = await axios.post('http://127.0.0.1:8000/auth/create_user/', userData)
+        const response = await axios.post(
+          "http://127.0.0.1:8000/auth/create_user/",
+          userData
+        );
+
+        console.log("User created successfully:", response.data);
+        alert("User created successfully");
+
+        if (response.data.success) {
+          console.log("sucesss ");
+          // setLoginObj({...loginObj, otp : response.data.payload.otp+""})
+          setLoading(false);
+          setIsOtpSent(true);
         } else {
-          console.error("Error message:", error.message);
-          alert("Error in setting up the request");
+          setErrorMessage(response.data.message);
         }
-      }
-    } finally {
+      } catch (error) {
+        if (error.name === 'ValidationError') {
+          const newErrors = {};
+          error.inner.forEach((err) => {
+            newErrors[err.path] = err.message;
+          });
+          setErrors(newErrors);
+        } else {
+          console.error('Error registering user:', error);
+        if (error.response) {
+          // Server responded with a status other than 2xx
+        console.error("Error response1:", error.response.data);
+      alert(error.response.data.message);
+    } else if (error.request) {
+      // Request was made but no response received
+    console.error("Error request2:", error.request);
+  alert("No response received from the server");
+} else {
+  // Something happened in setting up the request
+console.error("Error message3:", error.message);
+alert("Error in setting up the request");
+}
+}
+}
       setLoading(false);
-    }
+      setIsOtpSent(true);
+      //     setLoading(false)
+
+      // setIsOtpSent(true)
+      // console.log(error.response.data.message)
+      // console.log(response.data)
+      // if(response.data.success){
+      // setLoginObj({...loginObj, otp : response.data.payload.otp+""})
+      //     setIsOtpSent(true)
+      // }else{
+      //     setErrorMessage(response.data.message)
+      // }
+      //     setLoading(false)
+    
   };
   
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>timer >>>>>>>
@@ -252,7 +276,7 @@ useEffect(() => {
 
     <div className=" flex items-center rounded-xl">
       <div className="grid grid-cols-1 md:grid-cols-2 w-full ">
-        <div className="text-center rounded-xl bg-slate-100 ">
+        {/* <div className="text-center rounded-xl bg-slate-100 ">
           <div className="mt-10 md:mb-0 mb-10 inline-block">
             <span className="font-bold text-2xl">
               <img
@@ -295,7 +319,7 @@ useEffect(() => {
               })}
             </div>
           </div>
-        </div>
+        </div> */}
        
         <div className="md:p-10 pb-12">
           <form onSubmit={(e) => submitForm(e)}>

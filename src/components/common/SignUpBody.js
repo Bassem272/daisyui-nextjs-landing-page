@@ -26,15 +26,21 @@ function SignUpBody({ closeModal, extraObject }) {
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required('name is required'),
+    name: Yup.string().required('Name is required'),
     email: Yup.string().email('Invalid email address').required('Email is required'),
-    mobile: Yup.string().required('Mobile number is required'),
+    mobile: Yup.string()
+      .matches(/^[0-9]+$/, 'Mobile number must be a valid number')
+      .length(10, 'Mobile number must be exactly 10 digits')
+      .required('Mobile number is required'),
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('Confirm Password is required'),
     grade: Yup.string().required('Grade is required'),
+    age: Yup.number('Enter a valid number').required('Age is required'),
+    country: Yup.string().required('Country is required'),
   });
+  
 
   const { isSignIn } = extraObject;
   const dispatch = useDispatch();
@@ -169,84 +175,60 @@ function SignUpBody({ closeModal, extraObject }) {
   };
 
 //   this is working function 
-  const sendMailOtp = async (e) => {
-    setErrorMessage("");
-    try {
+const sendMailOtp = async (e) => {
+  setErrorMessage("");
+  try {
     await validationSchema.validate(loginObj, { abortEarly: false });
- 
 
-      
-      setLoading(true);
+    setLoading(true);
 
-      // Call API to check user credentials and save token in localstorage
-      // let response = await axios.post(process.env.NEXT_PUBLIC_BASE_URL+'/user/sendMailOTP', loginObj)
-      const userData = {
-        name: loginObj.name,
-        email: loginObj.email,
-        password: loginObj.password,
-        grade:loginObj.grade,
-        mobile: loginObj.mobile,
-        role: "student",
-        courses: [],
-        children: [],
-      };
-      // const response = await axios.post('http://127.0.0.1:8000/auth/create_user/', userData)
-        const response = await axios.post(
-          "http://127.0.0.1:8000/auth/create_user/",
-          userData
-        );
+    const userData = {
+      name: loginObj.name,
+      email: loginObj.email,
+      password: loginObj.password,
+      grade: loginObj.grade,
+      mobile: loginObj.mobile,
+      role: "student",
+      courses: [],
+      children: [],
+    };
 
-        console.log("User created successfully:", response.data);
-        alert("User created successfully");
+    const response = await axios.post("http://127.0.0.1:8000/auth/create_user/", userData);
 
-        if (response.data.success) {
-          console.log("sucesss ");
-          // setLoginObj({...loginObj, otp : response.data.payload.otp+""})
-          setLoading(false);
-          setIsOtpSent(true);
-        } else {
-          setErrorMessage(response.data.message);
-        }
-      } catch (error) {
-        if (error.name === 'ValidationError') {
-          const newErrors = {};
-          error.inner.forEach((err) => {
-            newErrors[err.path] = err.message;
-          });
-          setErrors(newErrors);
-        } else {
-          console.error('Error registering user:', error);
-        if (error.response) {
-          // Server responded with a status other than 2xx
-        console.error("Error response1:", error.response.data);
-      alert(error.response.data.message);
-    } else if (error.request) {
-      // Request was made but no response received
-    console.error("Error request2:", error.request);
-  alert("No response received from the server");
-} else {
-  // Something happened in setting up the request
-console.error("Error message3:", error.message);
-alert("Error in setting up the request");
-}
-}
-}
-      setLoading(false);
+    console.log("User created successfully:", response.data);
+    alert("User created successfully");
+
+    if (response.data.success) {
+      console.log("Success");
       setIsOtpSent(true);
-      //     setLoading(false)
+    } else {
+      setErrorMessage(response.data.message);
+    }
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      const newErrors = {};
+      error.inner.forEach((err) => {
+        newErrors[err.path] = err.message;
+      });
+      setErrors(newErrors);
+    } else {
+      console.error('Error registering user:', error);
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        alert(error.response.data.message);
+      } else if (error.request) {
+        console.error("Error request:", error.request);
+        alert("No response received from the server");
+      } else {
+        console.error("Error message:", error.message);
+        alert("Error in setting up the request");
+      }
+    }
+  } finally {
+    setLoading(false);
+  }
+};
 
-      // setIsOtpSent(true)
-      // console.log(error.response.data.message)
-      // console.log(response.data)
-      // if(response.data.success){
-      // setLoginObj({...loginObj, otp : response.data.payload.otp+""})
-      //     setIsOtpSent(true)
-      // }else{
-      //     setErrorMessage(response.data.message)
-      // }
-      //     setLoading(false)
-    
-  };
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>timer >>>>>>>
  const [showToast, setShowToast] = useState(false);
 
@@ -432,34 +414,12 @@ useEffect(() => {
               }
             />
           </label>
-          {/* {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>} */}
+          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
         </label>
 
 
 
-                  {/* <div className={`form-control w-full mt-2`}>
-                    <label className="label">
-                      <span
-                        className={
-                          "label-text text-base-content text-xs text-slate-600 "
-                        }
-                      >
-                        {"Enter your password"}
-                      </span>
-                    </label>
-                    <input
-                      type={"password"}
-                      value={loginObj.password}
-                      placeholder={"Ex- 1234asdf"}
-                      onChange={(e) =>
-                        updateFormValue({
-                          updateType: "password",
-                          value: e.target.value,
-                        })
-                      }
-                      className="input  input-bordered input-primary w-full "
-                    />
-                  </div> */}
+              
 
                    {/* name */}
         <label className="w-full">
@@ -567,31 +527,7 @@ useEffect(() => {
           {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
         </label>
 
-        {/* Grade */}
-        <label className="w-full">
-          <div className="label">
-            <span className="label-text">What is your grade?</span>
-          </div>
-          <label className="input input-bordered input-accent flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
-              <path d="M11.5 4a.5.5 0 0 0 0-1H6.707L8.354.854a.5.5 0 1 0-.708-.708l-2.5 2.5a.5.5 0 0 0 0 .708l2.5 2.5a.5.5 0 1 0 .708-.708L6.707 4H11.5ZM4.5 5a.5.5 0 0 0-.5.5v6H.707l1.647-1.646a.5.5 0 0 0-.708-.708l-2.5 2.5a.5.5 0 0 0 0 .708l2.5 2.5a.5.5 0 0 0 .708-.708L.707 13H4v3.5a.5.5 0 0 0 1 0v-12A.5.5 0 0 0 4.5 5Z" />
-            </svg>
-            <input
-              type="text"
-              className="input-info grow"
-              placeholder="Grade"
-              name="grade"
-              value={loginObj.grade}
-                  onChange={(e) =>
-                updateFormValue({
-                  updateType: "grade",
-                  value: e.target.value,
-                })
-              }
-            />
-          </label>
-          {errors.grade && <p className="text-red-500 text-sm">{errors.grade}</p>}
-        </label>
+
 
         {/* Grade */}
         <label className="w-full">
