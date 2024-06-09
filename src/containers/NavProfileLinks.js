@@ -5,10 +5,11 @@ import Link from "next/link"
 import { fetchUserDetail, setLoggedIn } from "@/store/userSlice"
 import { useEffect } from "react"
 import CircleStackIcon from '@heroicons/react/24/outline/CircleStackIcon'
-
+import { useRouter } from "next/router"
 
 function NavProfileLinks() {
 
+    const router = useRouter()
     const dispatch = useDispatch()
     const {isLoggedIn, credits, token} = useSelector(state => state.user)
 
@@ -19,8 +20,9 @@ function NavProfileLinks() {
     }, [token])
 
     const openLoginModal = () =>{
+        router.push('/sign-in')
         console.log("jere")
-        dispatch(openModal({title : "", size:"lg",  bodyType : MODAL_BODY_TYPES.SIGN_IN_MODAL, extraObject : {isSignIn : true}}))
+        // dispatch(openModal({title : "", size:"lg",  bodyType : MODAL_BODY_TYPES.SIGN_IN_MODAL, extraObject : {isSignIn : true}}))
     }
 
     const openPricingModal = () =>{
