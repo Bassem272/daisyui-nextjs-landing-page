@@ -784,6 +784,503 @@ useEffect(() => {
         </div>
 
       </div>
+      {!isOtpSent && (
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+          {/* Email */}
+          <label className="w-full">
+            <div className="label">
+              <span className="label-text">What is your email?</span>
+            </div>
+            <label className="input input-bordered input-accent flex items-center gap-2 mx-auto">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="h-4 w-4 opacity-70"
+              >
+                <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
+                <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
+              </svg>
+              <input
+                type="text"
+                className="grow"
+                value={loginObj.email}
+                placeholder={"Ex- name@gmail.com"}
+                onChange={(e) =>
+                  updateFormValue({
+                    updateType: "email",
+                    value: e.target.value,
+                  })
+                }
+              />
+            </label>
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email}</p>
+            )}
+          </label>
+
+          {/* Name */}
+          <label className="w-full">
+            <div className="label">
+              <span className="label-text">What is your name?</span>
+            </div>
+            <label className="input input-bordered input-accent flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="h-4 w-4 opacity-70"
+              >
+                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+              </svg>
+              <input
+                type="text"
+                className="grow"
+                placeholder="name"
+                name="name"
+                value={loginObj.name}
+                onChange={(e) =>
+                  updateFormValue({
+                    updateType: "name",
+                    value: e.target.value,
+                  })
+                }
+              />
+            </label>
+            {errors.name && (
+              <p className="text-red-500 text-sm">{errors.name}</p>
+            )}
+          </label>
+
+          {/* Mobile */}
+          <label className="w-full">
+            <div className="label">
+              <span className="label-text">What is your mobile?</span>
+            </div>
+            <label className="input input-bordered input-accent flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-4 w-4 opacity-70"
+              >
+                <path d="M10.5 18.75a.75.75 0 0 0 0 1.5h3a.75.75 0 0 0 0-1.5h-3Z" />
+                <path
+                  fill-rule="evenodd"
+                  d="M8.625.75A3.375 3.375 0 0 0 5.25 4.125v15.75a3.375 3.375 0 0 0 3.375 3.375h6.75a3.375 3.375 0 0 0 3.375-3.375V4.125A3.375 3.375 0 0 0 15.375.75h-6.75ZM7.5 4.125C7.5 3.504 8.004 3 8.625 3H9.75v.375c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V3h1.125c.621 0 1.125.504 1.125 1.125v15.75c0 .621-.504 1.125-1.125 1.125h-6.75A1.125 1.125 0 0 1 7.5 19.875V4.125Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <input
+                type="text"
+                className="input-info grow"
+                placeholder="Mobile"
+                name="mobile"
+                value={loginObj.mobile}
+                onChange={(e) =>
+                  updateFormValue({
+                    updateType: "mobile",
+                    value: e.target.value,
+                  })
+                }
+              />
+            </label>
+            {errors.mobile && (
+              <p className="text-red-500 text-sm">{errors.mobile}</p>
+            )}
+          </label>
+
+          {/* Password */}
+          <label className="w-full">
+            <div className="label">
+              <span className="label-text">What is your password?</span>
+            </div>
+            <label className="input input-bordered input-accent flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="h-4 w-4 opacity-70"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 1a3 3 0 0 0-3 3v2H4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2h-1V4a3 3 0 0 0-3-3ZM6 4a2 2 0 1 1 4 0v2H6V4Zm.5 6.5a1.5 1.5 0 1 1 2 1.415v.585a.5.5 0 0 1-1 0v-.585A1.5 1.5 0 0 1 6.5 10.5Z"
+                />
+              </svg>
+              <input
+                type="password"
+                className="grow"
+                placeholder="Password"
+                name="password"
+              value={loginObj.password}
+                  onChange={(e) =>
+                updateFormValue({
+                  updateType: "password",
+                  value: e.target.value,
+                })
+              }
+              />
+            </label>
+            {errors.password && (<p className="text-red-500 text-sm">{errors.password}</p>)}
+          </label>
+
+           {/* Confirm Password */}
+        <label className="w-full">
+          <div className="label">
+            <span className="label-text">Confirm your password</span>
+          </div>
+          <label className="input input-bordered input-accent flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
+              <path fillRule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clipRule="evenodd" />
+            </svg>
+            <input
+              type="password"
+              className="input-info grow"
+              placeholder="Confirm Password"
+              name="confirmPassword"
+              value={loginObj.confirmPassword}
+                  onChange={(e) =>
+                updateFormValue({
+                  updateType: "confirmPassword",
+                  value: e.target.value,
+                })
+              }
+            />
+          </label>
+          {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
+        </label>
+
+        {/* Grade */}
+        <label className="w-full">
+          <div className="label">
+            <span className="label-text">Select your grade</span>
+          </div>
+          <label className="input input-bordered input-accent flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
+              <path d="M2.5 1A1.5 1.5 0 0 0 1 2.5v11A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-11A1.5 1.5 0 0 0 13.5 1h-11ZM2 3h12v9H2V3Zm6 10.5a.5.5 0 0 1-1 0 .5.5 0 0 1 1 0Z" />
+            </svg>
+            <select
+              name="grade"
+              value={loginObj.grade}
+              onChange={(e) => {
+                updateFormValue({
+                  updateType: "grade",
+                  value: e.target.value,
+                })
+              }}
+              className="grow"
+            >
+              <option value="" disabled>Select your grade</option>
+              {[...Array(12).keys()].map(i => (
+                <option key={i + 1} value={`grade${i + 1}`}>{`Grade ${i + 1}`}</option>
+              ))}
+            </select>
+          </label>
+          {errors.grade && <p className="text-red-500 text-sm">{errors.grade}</p>}
+        </label>
+
+        {/* Country */}
+        <label className="w-full">
+          <div className="label">
+            <span className="label-text">What is your country?</span>
+          </div>
+          <label className="input input-bordered input-accent flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
+              <path d="M8.5 5.5a.5.5 0 0 0-1 0v5a.5.5 0 0 0 1 0v-5ZM3 8a5 5 0 1 1 10 0A5 5 0 0 1 3 8ZM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12Z" />
+            </svg>
+            <input
+              type="text"
+              className="grow"
+              placeholder="Country"
+              name="country"
+              value={loginObj.country}
+                  onChange={(e) =>
+                updateFormValue({
+                  updateType: "country",
+                  value: e.target.value,
+                })
+              }
+            />
+          </label>
+          {errors.country && <p className="text-red-500 text-sm">{errors.country}</p>}
+        </label>
+
+        {/* Age */}
+        <label className="w-full">
+          <div className="label">
+            <span className="label-text">What is your age?</span>
+          </div>
+          <label className="input input-bordered input-accent flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
+              <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1ZM2.598 9.008l4.484 4.485a6 6 0 0 1-4.484-4.485ZM8 14a6 6 0 0 1-4.485-1.91L10.09 5.515A6 6 0 0 1 8 14ZM3.514 3.515A6 6 0 0 1 8 2v2.439l-3.485 3.484A6 6 0 0 1 3.514 3.515ZM9 2a6 6 0 0 1 4.485 1.91L5.91 10.485A6 6 0 0 1 9 2ZM13.402 9.008 8.918 4.523A6 6 0 0 1 13.402 9.008ZM14 8a6 6 0 0 1-1.514 3.485l-4.485-4.485A6 6 0 0 1 14 8ZM8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Z" />
+            </svg>
+            <input
+              type="text"
+              className="grow"
+              placeholder="Age"
+              name="age"
+              value={loginObj.age}
+                  onChange={(e) =>
+                updateFormValue({
+                  updateType: "age",
+                  value: e.target.value,
+                })
+              }
+            />
+          </label>
+          {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
+        </label>
+
+        {/* Role */}
+        <label className="w-full">
+          <div className="label">
+            <span className="label-text">What is your role?</span>
+          </div>
+          <label className="input input-bordered input-accent flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
+              <path d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm1 1H7a4 4 0 0 0-4 4 .5.5 0 0 0 1 0 3 3 0 0 1 6 0 .5.5 0 0 0 1 0 4 4 0 0 0-4-4Zm4-1a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm-2 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM4.5 10a.5.5 0 0 0-.5.5v.5a1 1 0 0 0 2 0v-.5a.5.5 0 0 0-.5-.5h-1Zm7.5 0a.5.5 0 0 0-.5.5v.5a1 1 0 0 0 2 0v-.5a.5.5 0 0 0-.5-.5h-1Z" />
+            </svg>
+            <select
+              name="role"
+              value={loginObj.role}
+                  onChange={(e) =>
+                updateFormValue({
+                  updateType: "role",
+                  value: e.target.value,
+                })
+              }
+              className="grow"
+            >
+              <option disabled selected>Select your role</option>
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+              <option value="parent">Parent</option>
+            </select>
+          </label>
+          {errors.role && <p className="text-red-500 text-sm">{errors.role}</p>}
+        </label>
+        </div>
+      )}
+
+
+<div className="md:p-10 pb-12 bg-red-300">
+        <form onSubmit={(e) => submitForm(e)}>
+        <div className="mb-10">
+      {/* {!isOtpSent && (
+        <p className="text-center md:mt-0 mt-6 text-xl mb-4 font-semibold">
+          {isSignIn ? "Sign In" : "Sign Up"}
+        </p>
+      )} */}
+      {/* {isOtpSent && (
+        <>
+          <p className="text-center text-lg md:mt-0 mt-6 font-semibold">
+            Enter verification code received on {loginObj.email}
+          </p>
+          <p className="text-center text-slate-500 mt-2 text-sm">
+            Didn&apos;t receive mail? Check spam folder
+          </p>
+        </>
+      )} */}
+
+      {isOtpSent && showToast && (
+        <div className="toast toast-end">
+          <div className="alert alert-info flex flex-col ">
+            <progress className="progress w-20"></progress>
+            <span>New mail arrived.</span>
+          </div>
+          <div className="alert alert-success">
+            <span>Message sent successfully.</span>
+          </div>
+          <div role="alert" className="alert alert-success">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>Your purchase has been confirmed!</span>
+          </div>
+          <div role="alert" className="alert">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-info shrink-0 w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <span>we use cookies for no reason.</span>
+            <div>
+              <button className="btn btn-sm">Deny</button>
+              <button onClick={accept} class="btn btn-sm btn-primary">
+                Accept
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* user exits  */}
+      {userCreated && (
+        <div className="toast toast-end">
+          
+       
+          <div role="alert" className="alert">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-info shrink-0 w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <span>User created successfully</span>
+            <div>
+              {/* <button className="btn btn-sm">Deny</button> */}
+              <button onClick={accept} class="btn btn-sm btn-primary">
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* user created */}
+      {userExists && (
+        <div className="toast toast-end">
+          
+       
+          <div role="alert" className="alert">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-info shrink-0 w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <span>User already exits with the same email</span>
+            <div>
+              {/* <button className="btn btn-sm">Deny</button> */}
+              <button onClick={accept} class="btn btn-sm btn-primary">
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* toast message */}
+      {showToast && (
+        <div className="toast toast-end">
+          
+       
+          <div role="alert" className="alert">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-info shrink-0 w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <span>{messageToast}</span>
+            <div>
+              {/* <button className="btn btn-sm">Deny</button> */}
+              <button onClick={accept} class="btn btn-sm btn-primary">
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    
+      {isOtpSent && (
+        <div className="flex justify-center">
+          <label className="input input-bordered input-accent flex items-center gap-2">
+            <input
+              type="text"
+              className="grow"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+            />
+          </label>
+        </div>
+      )}
+    </div>
+
+            {/* <button
+              type="submit"
+              className={"btn mt-2 normal-case w-full btn-primary text-white  "}
+            >
+              {loading && <span className="loading loading-spinner"></span>}
+              {isOtpSent ? `Verify` : `Get Verification Code`}
+            </button> */}
+
+            {/* {isSignIn ? (
+              <div className="text-center mt-4">
+                {`Don't have an account yet?`}
+                <div onClick={openSignUp} className="ml-2 inline-block">
+                  <span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">
+                    Sign Up
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center mt-4">
+                Already have an account?{" "}
+                <div onClick={() => openSignIn()} className="inline-block">
+                  <span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">
+                    Sign In
+                  </span>
+                </div>
+              </div>
+            )} */}
+   
+    {/* <div className="text-center mt-6">
+
+      <button type="submit" className="btn btn-primary w-full">
+        {isOtpSent ? "Verify OTP" : isSignIn ? "Sign In" : "Sign Up"}
+      </button>
+      <p className="mt-4">
+        <a
+          className="link link-hover text-blue-600"
+          onClick={() => setIsSignIn(!isSignIn)}
+        >
+          {isSignIn
+            ? "Don't have an account? Sign Up"
+            : "Already have an account? Sign In"}
+        </a>
+      </p>
+    </div> */}
+  </form>
+</div>
     </div>
     // </ModalWrapper>
   );

@@ -4,15 +4,20 @@ import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { closeModal, openModal } from "@/store/modalSlice";
 import { MODAL_BODY_TYPES } from "@/utils/globalConstantUtil";
-import { setCredits, setLoggedIn, setToken } from "@/store/userSlice";
+import { setCredits, setLoggedIn, setToken , fetchUserDetail } from "@/store/userSlice";
 import analyticsUtil from "@/utils/analyticsUtil";
 import { SIGN_UP_IMAGES } from "@/utils/globalConstantUtil";
 import { ModalWrapper } from "@/components/common/ModalWrapper";
 import { useRouter } from "next/navigation";
 import * as Yup from 'yup';
 import PhoneInput from 'react-phone-input-2';
-
-
+import React, { useMemo } from 'react';
+import Select from 'react-select';
+import countryList from 'react-select-country-list';
+import { AiFillCompass } from "react-icons/ai";
+import { FaPersonCircleQuestion } from "react-icons/fa6";
+import { GiWorld } from "react-icons/gi";
+s
 function SignUpBody({ closeModal, extraObject }) {
   
   const router = useRouter();
@@ -27,6 +32,13 @@ function SignUpBody({ closeModal, extraObject }) {
     grade: '',
   };
 
+  const [country, setCountry] = useState('');
+  // const [mobile, setMobile] = useState('');
+  const options = useMemo(() => countryList().getData(), []);
+
+  const handleCountryChange = (value) => {
+    setCountry(value);
+  };
   const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
     email: Yup.string().email('Invalid email address').required('Email is required'),
@@ -41,6 +53,12 @@ function SignUpBody({ closeModal, extraObject }) {
     grade: Yup.string().required('Grade is required'),
     age: Yup.number('Enter a valid number').required('Age is required'),
     country: Yup.string().required('Country is required'),
+    otp: Yup.string()
+    .when('isOtpSent', {
+      is: true,
+      then: Yup.string().required('OTP is required'),
+      otherwise: Yup.string().notRequired()
+    })
   });
   
 
@@ -50,7 +68,9 @@ function SignUpBody({ closeModal, extraObject }) {
   useEffect(() => {
     setLoading(false);
     setIsOtpSent(false);
+    setMessageToast("")
     setErrorMessage("");
+    setErrors({});
     setLoginObj({ otp: "", email: "", password: ""  , confirmPassword:"",mobile:"", name:"",});
   }, [isSignIn]);
 
@@ -58,7 +78,19 @@ function SignUpBody({ closeModal, extraObject }) {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [loginObj, setLoginObj] = useState(INITIAL_REGISTER_OBJ);
+  const [errors, setErrors] = useState({});
 
+  const [timeoutId, setTimeoutId] = useState(null);
+
+  useEffect(() => {
+    
+    return ()=>{
+      if(timeoutId){
+        
+        clearTimeout(timeoutId)
+        }
+    }
+  }, [timeoutId])
   const openSignUp = () => {
     // dispatch(closeModal())
     closeModal();
@@ -66,14 +98,7 @@ function SignUpBody({ closeModal, extraObject }) {
   };
 
   const openSignIn = () => {
-    // dispatch(
-    //   openModal({
-    //     title: "",
-    //     size: "lg",
-    //     bodyType: MODAL_BODY_TYPES.SIGN_IN_MODAL,
-    //     extraObject: { isSignIn: true },
-    //   })
-    // );
+  
     router.push("/sign-in");
   };
 
@@ -83,21 +108,13 @@ function SignUpBody({ closeModal, extraObject }) {
   //         submitVerificationCode()
   //    }
   // }, [loginObj.otp])
-  const [errors, setErrors] = useState({});
+ 
 
   const submitVerificationCode = async (e) => {
     setErrorMessage("");
-    if (loginObj.email.trim() === "")
-      return setErrorMessage("Email Id is Required!");
-    if (loginObj.password.trim() === "")
-      return setErrorMessage("password is Required!");
-    if (loginObj.otp.trim() === "")
-      return setErrorMessage("Verification Code is Required!");
-    else if (
-      !/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(loginObj.email.trim())
-    ) {
-      return setErrorMessage("Email Id is Wrong!");
-    } else {
+    setErrors({});
+    console.log("submitVerificationCode", loginObj.otp);
+  
       setLoading(true);
       const userDatao = {
         // name: "ahmed or john",
@@ -118,14 +135,19 @@ function SignUpBody({ closeModal, extraObject }) {
         
         if (response.data.message === "Email verified successfully") {
           alert("Email verified successfully");
+
           setLoading(false);
           dispatch(setLoggedIn(true));
           setIsOtpSent(true);
+            setMessageToast("Email verified successfully !");
           setShowToast(true);
           console.log("email verified now");
-          dispatch(closeModal())
+          dispatch(fetchUserDetail())
         } else {
           setErrorMessage(response.data.message);
+          setErrors(response.data.message);
+          setMessageToast(response.data.message);
+          setShowToast(true);
         }
       } catch (error) {
         
@@ -133,9 +155,13 @@ function SignUpBody({ closeModal, extraObject }) {
           // Server responded with a status other than 2xx
           console.error("Error response1:", error.response.data);
           alert(error.response.data.message);
+          setMessageToast(error.response.data.message);
+          setShowToast(true);
         } else if (error.request) {
           // Request was made but no response received
           console.error("Error request2:", error.request);
+          setMessageToast("No response received from the server");
+          setShowToast(true);
           alert("No response received from the server");
         } else {
           // Something happened in setting up the request
@@ -163,7 +189,7 @@ function SignUpBody({ closeModal, extraObject }) {
     //     setErrorMessage(response.data.message);
     //   }
     //   setLoading(false);
-       }
+       
       };
 
   const submitForm = async (e) => {
@@ -179,6 +205,9 @@ function SignUpBody({ closeModal, extraObject }) {
 //   this is working function 
 const sendMailOtp = async (e) => {
   setErrorMessage("");
+  setErrors({});
+  setShowToast(false)
+  
   try {
     await validationSchema.validate(loginObj, { abortEarly: false });
 
@@ -194,6 +223,7 @@ const sendMailOtp = async (e) => {
       courses: [],
       children: [],
     };
+    console.log("userData", userData);
 
     const response = await axios.post("http://127.0.0.1:8000/auth/create_user/", userData);
 
@@ -201,8 +231,10 @@ const sendMailOtp = async (e) => {
     alert("User created successfully");
 
     if (response.data.success) {
-      console.log("Success");
       setIsOtpSent(true);
+      setMessageToast("User created successfully");
+      setShowToast(true);
+      console.log("Success");
     } else {
       setErrorMessage(response.data.message);
     }
@@ -212,14 +244,27 @@ const sendMailOtp = async (e) => {
       error.inner.forEach((err) => {
         newErrors[err.path] = err.message;
       });
+
       setErrors(newErrors);
+
     } else {
       console.error('Error registering user:', error);
       if (error.response) {
         console.error("Error response:", error.response.data);
+        if(error.response.data.message === 'Email already exists'){
+          setMessageToast("Email already exists");
+          setShowToast(true);
+          // router.push('/sign-in');
+          const id = setTimeout(() => {
+            router.push('/sign-in');
+          }, 5000);
+          setTimeoutId(id);
+        }
         alert(error.response.data.message);
       } else if (error.request) {
         console.error("Error request:", error.request);
+        setMessageToast("No response received from the server");
+        setShowToast(true);
         alert("No response received from the server");
       } else {
         console.error("Error message:", error.message);
@@ -231,11 +276,18 @@ const sendMailOtp = async (e) => {
   }
 };
 
+
+
+// clearTimeout(timeoutId); // Stops the timeout
+
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>timer >>>>>>>
  const [showToast, setShowToast] = useState(false);
+ const [userCreated, setUserCreated] = useState(false);
+ const [userExists, setUserExists] = useState(false);
+ const [messageToast, setMessageToast] = useState("");
 
 useEffect(() => {
-    if (isOtpSent) {
+    if (showToast) {
       setShowToast(true);
 
       const timer = setTimeout(() => {
@@ -245,11 +297,12 @@ useEffect(() => {
       // Cleanup the timer if the component unmounts or isOtpSent changes
       return () => clearTimeout(timer);
     }
-  }, [isOtpSent]);
+  }, [showToast]);
 
  const accept = () => {
     // setIsOtpSent(false);
     setShowToast(false);
+    
   }
  
 
@@ -308,10 +361,13 @@ useEffect(() => {
             </div>
           </div>
         </div>
+
+
+        {/* form >>>>>>>>> */}
        
-        <div className="md:p-10 pb-12 bg-red-300">
+        <div className="p-12 md:p-10 pb-12 bg-red-300 ">
           <form onSubmit={(e) => submitForm(e)}>
-            <div className="mb-4">
+            <div className="mb-10">
               {!isOtpSent && (
                 <p className="text-center md:mt-0 mt-6 text-xl mb-4 font-semibold">
                   {isSignIn ? "Sign In" : "Sign Up"}
@@ -369,60 +425,9 @@ useEffect(() => {
               )}
               {!isOtpSent && (
                 <>
-                  {/* <div className={`form-control w-full mt-8`}>
-                    <label className="label">
-                      <span
-                        className={
-                          "label-text text-base-content text-xs text-slate-600 "
-                        }
-                      >
-                        {"Enter your email "}
-                      </span>
-                    </label>
-                    <input
-                      type={"text"}
-                      value={loginObj.email}
-                      placeholder={"Ex- name@gmail.com"}
-                      onChange={(e) =>
-                        updateFormValue({
-                          updateType: "email",
-                          value: e.target.value,
-                        })
-                      }
-                      className="input  input-bordered input-primary w-full "
-                    />
-                  </div> */}
 
-                               {/* Email */}
-        <label className="w-full bg-blue-300">
-          <div className="label">
-            <span className="label-text ml-9">What is your email?</span>
-          </div>
-          <label className="input input-bordered input-accent 
-          w-5/6 flex items-center gap-2 mx-auto">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
-              <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
-              <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
-            </svg>
-            <input
-              type="text"
-              className="grow bg-red-300"
-              value={loginObj.email}
-              placeholder={"Ex- name@gmail.com"}
-              onChange={(e) =>
-                updateFormValue({
-                  updateType: "email",
-                  value: e.target.value,
-                })
-              }
-            />
-          </label>
-          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-        </label>
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
 
-
-
-              
 
                    {/* name */}
         <label className="w-full">
@@ -451,7 +456,62 @@ useEffect(() => {
           {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
         </label>
 
-         {/* Mobile */}
+                         {/* Email */}
+
+                         <label className="w-full ">
+          <div className="label">
+            <span className="label-text ">What is your email?</span>
+          </div>
+          <label className="input input-bordered input-accent 
+                  flex items-center gap-2 mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
+              <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
+              <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
+            </svg>
+            <input
+              type="text"
+              className="grow "
+              value={loginObj.email}
+              placeholder={"Ex- name@gmail.com"}
+              onChange={(e) =>
+                updateFormValue({
+                  updateType: "email",
+                  value: e.target.value,
+                })
+              }
+            />
+          </label>
+          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+        </label>
+
+                         {/* Age */}
+                         <label className="w-full">
+          <div className="label">
+            <span className="label-text">What is your age?</span>
+          </div>
+          <label className="input input-bordered input-accent flex items-center gap-2">
+            {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
+              <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1ZM2.598 9.008l4.484 4.485a6 6 0 0 1-4.484-4.485ZM8 14a6 6 0 0 1-4.485-1.91L10.09 5.515A6 6 0 0 1 8 14ZM3.514 3.515A6 6 0 0 1 8 2v2.439l-3.485 3.484A6 6 0 0 1 3.514 3.515ZM9 2a6 6 0 0 1 4.485 1.91L5.91 10.485A6 6 0 0 1 9 2ZM13.402 9.008 8.918 4.523A6 6 0 0 1 13.402 9.008ZM14 8a6 6 0 0 1-1.514 3.485l-4.485-4.485A6 6 0 0 1 14 8ZM8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Z" />
+            </svg> */}
+            <FaPersonCircleQuestion />
+            <input
+              type="text"
+              className="grow"
+              placeholder="Age"
+              name="age"
+              value={loginObj.age}
+                  onChange={(e) =>
+                updateFormValue({
+                  updateType: "age",
+                  value: e.target.value,
+                })
+              }
+            />
+          </label>
+          {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
+        </label>
+
+              {/* Mobile */}
         <label className="w-full">
           <div className="label">
             <span className="label-text">What is your mobile?</span>
@@ -478,7 +538,7 @@ useEffect(() => {
           {errors.mobile && <p className="text-red-500 text-sm">{errors.mobile}</p>}
         </label>
 
-        {/* Password */}
+             {/* Password */}
         <label className="w-full">
           <div className="label">
             <span className="label-text">What is your password?</span>
@@ -504,7 +564,7 @@ useEffect(() => {
           {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
         </label>
 
-        {/* Confirm Password */}
+             {/* Confirm Password */}
         <label className="w-full">
           <div className="label">
             <span className="label-text">Confirm your password</span>
@@ -530,9 +590,7 @@ useEffect(() => {
           {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
         </label>
 
-
-
-        {/* Grade */}
+               {/* Grade */}
         <label className="w-full">
           <div className="label">
             <span className="label-text">Select your grade</span>
@@ -561,16 +619,18 @@ useEffect(() => {
           {errors.grade && <p className="text-red-500 text-sm">{errors.grade}</p>}
         </label>
 
-
-        {/* Country */}
+                {/* Country */}
         <label className="w-full">
           <div className="label">
             <span className="label-text">What is your country?</span>
           </div>
           <label className="input input-bordered input-accent flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
+            {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
               <path d="M8.5 5.5a.5.5 0 0 0-1 0v5a.5.5 0 0 0 1 0v-5ZM3 8a5 5 0 1 1 10 0A5 5 0 0 1 3 8ZM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12Z" />
-            </svg>
+            </svg> */}
+            {/* <AiFillCompass /> */}
+            
+              <GiWorld />
             <input
               type="text"
               className="grow"
@@ -588,33 +648,9 @@ useEffect(() => {
           {errors.country && <p className="text-red-500 text-sm">{errors.country}</p>}
         </label>
 
-        {/* Age */}
-        <label className="w-full">
-          <div className="label">
-            <span className="label-text">What is your age?</span>
-          </div>
-          <label className="input input-bordered input-accent flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
-              <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1ZM2.598 9.008l4.484 4.485a6 6 0 0 1-4.484-4.485ZM8 14a6 6 0 0 1-4.485-1.91L10.09 5.515A6 6 0 0 1 8 14ZM3.514 3.515A6 6 0 0 1 8 2v2.439l-3.485 3.484A6 6 0 0 1 3.514 3.515ZM9 2a6 6 0 0 1 4.485 1.91L5.91 10.485A6 6 0 0 1 9 2ZM13.402 9.008 8.918 4.523A6 6 0 0 1 13.402 9.008ZM14 8a6 6 0 0 1-1.514 3.485l-4.485-4.485A6 6 0 0 1 14 8ZM8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Z" />
-            </svg>
-            <input
-              type="text"
-              className="grow"
-              placeholder="Age"
-              name="age"
-              value={loginObj.age}
-                  onChange={(e) =>
-                updateFormValue({
-                  updateType: "age",
-                  value: e.target.value,
-                })
-              }
-            />
-          </label>
-          {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
-        </label>
 
-        {/* Role */}
+
+               {/* Role */}
         <label className="w-full">
           <div className="label">
             <span className="label-text">What is your role?</span>
@@ -642,24 +678,22 @@ useEffect(() => {
           </label>
           {errors.role && <p className="text-red-500 text-sm">{errors.role}</p>}
         </label>
+        </div>
 
         {/* Repeat similar structure for other fields */}
 
         {/* Submit Button */}
-        <button
+        {/* <button
           type="submit"
           className="btn btn-primary btn-primary h-1/2 transition delay-150 duration-300 ease-in-out hover:btn-secondary hover:-translate-y-1 hover:scale-110"
         >
           Register
-        </button>
+        </button> */}
 
         {/* Divider */}
-        <div className="flex w-full flex-col border-opacity-50">
+        {/* <div className="flex w-full flex-col border-opacity-50">
           <div className="divider">OR</div>
-        </div>
-
-      
-
+        </div> */}
                 </>
               )}
 
@@ -686,6 +720,7 @@ useEffect(() => {
                     }
                     className="input  input-bordered input-primary w-full "
                   />
+                      {errors.otp && <div className="text-red-500 text-sm">{errors.otp}</div>}
                 </div>
               )}
             </div>
@@ -696,6 +731,7 @@ useEffect(() => {
 
             {/* {!isSignIn && <div className="badge badge-warning float-right ml-2 text-xs normal-case">Get 5 Credits FREE on Sign Up</div>} */}
             {/* <div className="badge badge-secondary float-right ml-2 normal-case">Get 5 Credits FREE</div> */}
+           
             <button
               type="submit"
               className={"btn mt-2 normal-case w-full btn-primary text-white  "}
@@ -704,7 +740,7 @@ useEffect(() => {
               {isOtpSent ? `Verify` : `Get Verification Code`}
             </button>
 
-            {isSignIn ? (
+                {isSignIn ? (
               <div className="text-center mt-4">
                 {`Don't have an account yet?`}
                 <div onClick={openSignUp} className="ml-2 inline-block">
@@ -725,6 +761,162 @@ useEffect(() => {
             )}
           </form>
         </div>
+
+
+ 
+
+{/* tooooooooooooooooooooooooooooooooosts==================<< important >>   */}
+{isOtpSent && showToast && (
+        <div className="toast toast-end">
+          <div className="alert alert-info flex flex-col ">
+            <progress className="progress w-20"></progress>
+            <span>New mail arrived.</span>
+          </div>
+          <div className="alert alert-success">
+            <span>Message sent successfully.</span>
+          </div>
+          <div role="alert" className="alert alert-success">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>Your purchase has been confirmed!</span>
+          </div>
+          <div role="alert" className="alert">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-info shrink-0 w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <span>we use cookies for no reason.</span>
+            <div>
+              <button className="btn btn-sm">Deny</button>
+              <button onClick={accept} class="btn btn-sm btn-primary">
+                Accept
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* user exits  */}
+      {userCreated && (
+        <div className="toast toast-end">
+          
+       
+          <div role="alert" className="alert">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-info shrink-0 w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <span>User created successfully</span>
+            <div>
+              {/* <button className="btn btn-sm">Deny</button> */}
+              <button onClick={accept} class="btn btn-sm btn-primary">
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* user created */}
+      {userExists && (
+        <div className="toast toast-end">
+          
+       
+          <div role="alert" className="alert">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-info shrink-0 w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <span>User already exits with the same email</span>
+            <div>
+              {/* <button className="btn btn-sm">Deny</button> */}
+              <button onClick={accept} class="btn btn-sm btn-primary">
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* toast message */}
+      {showToast && (
+        <div className="toast toast-end">
+          
+       
+          <div role="alert" className="alert">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="stroke-info shrink-0 w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <span>{messageToast}</span>
+            <div>
+              {/* <button className="btn btn-sm">Deny</button> */}
+              <button onClick={accept} class="btn btn-sm btn-primary">
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    
+      {isOtpSent && (
+        <div className="flex justify-center">
+          <label className="input input-bordered input-accent flex items-center gap-2">
+            <input
+              type="text"
+              className="grow"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+            />
+          </label>
+        </div>
+      )}
 
       </div>
     </div>

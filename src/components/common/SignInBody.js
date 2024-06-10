@@ -158,7 +158,7 @@ function SignInBody({ closeModal, extraObject }) {
 
       const timer = setTimeout(() => {
         setShowToast(false);
-      }, 20000); // Dismiss after 5 seconds
+      }, 80000); // Dismiss after 5 seconds
 
       // Cleanup the timer if the component unmounts or isOtpSent changes
       return () => clearTimeout(timer);
@@ -315,6 +315,38 @@ function SignInBody({ closeModal, extraObject }) {
           </form>
         </div>
       </div>
+
+
+{/* toast  */}
+{isOtpSent 
+              && showToast
+               && (
+                <>
+                  <div className="toast toast-end">
+                  {/* <progress className="progress w-100"></progress> */}
+                  
+                    <div className="alert alert-success">
+                      <span>You logged in successfully.</span>
+                    </div> 
+                            
+
+<div role="alert" className="alert h-16">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+  <span>You logged in successfully.</span>
+  <div>
+    {/* <button className="btn btn-sm">Deny</button> */}
+    <button onClick={accept} class="btn btn-sm btn-primary">OK</button>
+  </div>
+</div>
+                  </div>
+
+  
+
+        
+                </>
+              )}
+
+
     </div>
     // </ModalWrapper>
   );
