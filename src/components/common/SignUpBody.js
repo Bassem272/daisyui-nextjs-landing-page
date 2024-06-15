@@ -17,7 +17,9 @@ import countryList from 'react-select-country-list';
 import { AiFillCompass } from "react-icons/ai";
 import { FaPersonCircleQuestion } from "react-icons/fa6";
 import { GiWorld } from "react-icons/gi";
-s
+import { RiLockPasswordLine } from "react-icons/ri";
+
+
 function SignUpBody({ closeModal, extraObject }) {
   
   const router = useRouter();
@@ -25,11 +27,12 @@ function SignUpBody({ closeModal, extraObject }) {
     otp: "",
     email: "",
     password: "",
-
     name: '',
     mobile: '',
     confirmPassword: '',
     grade: '',
+    country: '',
+    role:'',
   };
 
   const [country, setCountry] = useState('');
@@ -53,12 +56,20 @@ function SignUpBody({ closeModal, extraObject }) {
     grade: Yup.string().required('Grade is required'),
     age: Yup.number('Enter a valid number').required('Age is required'),
     country: Yup.string().required('Country is required'),
-    otp: Yup.string()
-    .when('isOtpSent', {
-      is: true,
-      then: Yup.string().required('OTP is required'),
-      otherwise: Yup.string().notRequired()
-    })
+   role: Yup.string().required('Role is required'),
+    // otp: Yup.string()
+    // .when('isOtpSent', {
+    //   is: true,
+    //   then: Yup.string().required('OTP is required'),
+    //   otherwise: Yup.string().notRequired()
+    // })
+    // otp: Yup.string().required('OTP is required'),
+    // .when('isOtpSent', {
+    //   is: true,
+    //   then: Yup.string().required('OTP is required'),
+    //   otherwise: Yup.string().notRequired()
+    // }),
+    // isOtpSent: Yup.boolean(),
   });
   
 
@@ -71,7 +82,9 @@ function SignUpBody({ closeModal, extraObject }) {
     setMessageToast("")
     setErrorMessage("");
     setErrors({});
-    setLoginObj({ otp: "", email: "", password: ""  , confirmPassword:"",mobile:"", name:"",});
+    setLoginObj({ otp: "", email: "", password: ""  , confirmPassword:"",mobile:"", name:"",
+      country:"", grade:"", role:""
+    });
   }, [isSignIn]);
 
   const [loading, setLoading] = useState(false);
@@ -168,8 +181,10 @@ function SignUpBody({ closeModal, extraObject }) {
           console.error("Error message3:", error.message);
           alert("Error in setting up the request");
         }
-      }
-      setLoading(false);
+      } finally{
+
+        setLoading(false);
+        }
       // setIsOtpSent(true);
 
       // let response = await axios.post(process.env.NEXT_PUBLIC_BASE_URL+'/user/verifyMailOTP', loginObj)
@@ -196,6 +211,7 @@ function SignUpBody({ closeModal, extraObject }) {
     e.preventDefault();
     if (loading) return 1;
     if (isOtpSent) {
+      console.log("otp is sent");
       submitVerificationCode();
     } else {
       sendMailOtp();
@@ -219,6 +235,8 @@ const sendMailOtp = async (e) => {
       password: loginObj.password,
       grade: loginObj.grade,
       mobile: loginObj.mobile,
+      country:loginObj.country,
+      
       role: "student",
       courses: [],
       children: [],
@@ -230,7 +248,7 @@ const sendMailOtp = async (e) => {
     console.log("User created successfully:", response.data);
     alert("User created successfully");
 
-    if (response.data.success) {
+    if (response.data) {
       setIsOtpSent(true);
       setMessageToast("User created successfully");
       setShowToast(true);
@@ -316,7 +334,9 @@ useEffect(() => {
     // <ModalWrapper isOpen={isOpen} title={isSignIn ? "Sign In" : "Sign Up"} size="lg" closeModal={closeModal}>
 
     <div className=" flex items-center rounded-xl">
+
       <div className="grid grid-cols-1 md:grid-cols-2 w-full ">
+
         <div className="text-center rounded-xl bg-slate-100 ">
           <div className="mt-10 md:mb-0 mb-10 inline-block">
             <span className="font-bold text-2xl">
@@ -368,6 +388,7 @@ useEffect(() => {
         <div className="p-12 md:p-10 pb-12 bg-red-300 ">
           <form onSubmit={(e) => submitForm(e)}>
             <div className="mb-10">
+
               {!isOtpSent && (
                 <p className="text-center md:mt-0 mt-6 text-xl mb-4 font-semibold">
                   {isSignIn ? "Sign In" : "Sign Up"}
@@ -425,10 +446,7 @@ useEffect(() => {
               )}
               {!isOtpSent && (
                 <>
-
         <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
-
-
                    {/* name */}
         <label className="w-full">
           <div className="label">
@@ -455,10 +473,9 @@ useEffect(() => {
           </label>
           {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
         </label>
-
                          {/* Email */}
 
-                         <label className="w-full ">
+               <label className="w-full ">
           <div className="label">
             <span className="label-text ">What is your email?</span>
           </div>
@@ -482,7 +499,7 @@ useEffect(() => {
             />
           </label>
           {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-        </label>
+                  </label>
 
                          {/* Age */}
                          <label className="w-full">
@@ -509,8 +526,8 @@ useEffect(() => {
             />
           </label>
           {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
-        </label>
-
+                           </label>
+    
               {/* Mobile */}
         <label className="w-full">
           <div className="label">
@@ -601,6 +618,7 @@ useEffect(() => {
             </svg>
             <select
               name="grade"
+              defaultChecked={loginObj.grade === 'grade 6'}
               value={loginObj.grade}
               onChange={(e) => {
                 updateFormValue({
@@ -610,7 +628,7 @@ useEffect(() => {
               }}
               className="grow"
             >
-              <option value="" disabled>Select your grade</option>
+              <option value="" >Select your grade</option>
               {[...Array(12).keys()].map(i => (
                 <option key={i + 1} value={`grade${i + 1}`}>{`Grade ${i + 1}`}</option>
               ))}
@@ -625,11 +643,6 @@ useEffect(() => {
             <span className="label-text">What is your country?</span>
           </div>
           <label className="input input-bordered input-accent flex items-center gap-2">
-            {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
-              <path d="M8.5 5.5a.5.5 0 0 0-1 0v5a.5.5 0 0 0 1 0v-5ZM3 8a5 5 0 1 1 10 0A5 5 0 0 1 3 8ZM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12Z" />
-            </svg> */}
-            {/* <AiFillCompass /> */}
-            
               <GiWorld />
             <input
               type="text"
@@ -649,7 +662,6 @@ useEffect(() => {
         </label>
 
 
-
                {/* Role */}
         <label className="w-full">
           <div className="label">
@@ -660,6 +672,7 @@ useEffect(() => {
               <path d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm1 1H7a4 4 0 0 0-4 4 .5.5 0 0 0 1 0 3 3 0 0 1 6 0 .5.5 0 0 0 1 0 4 4 0 0 0-4-4Zm4-1a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm-2 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM4.5 10a.5.5 0 0 0-.5.5v.5a1 1 0 0 0 2 0v-.5a.5.5 0 0 0-.5-.5h-1Zm7.5 0a.5.5 0 0 0-.5.5v.5a1 1 0 0 0 2 0v-.5a.5.5 0 0 0-.5-.5h-1Z" />
             </svg>
             <select
+            // defaultChecked={loginObj.role === 'student'}
               name="role"
               value={loginObj.role}
                   onChange={(e) =>
@@ -670,7 +683,7 @@ useEffect(() => {
               }
               className="grow"
             >
-              <option disabled selected>Select your role</option>
+              <option value="" >Select your role</option>
               <option value="student">Student</option>
               <option value="teacher">Teacher</option>
               <option value="parent">Parent</option>
@@ -708,6 +721,7 @@ useEffect(() => {
                       {"Verification Code"}
                     </span>
                   </label>
+                 
                   <input
                     type={"otp"}
                     value={loginObj.otp}
@@ -720,10 +734,36 @@ useEffect(() => {
                     }
                     className="input  input-bordered input-primary w-full "
                   />
-                      {errors.otp && <div className="text-red-500 text-sm">{errors.otp}</div>}
+                  
+                      {/* {errors.otp && <div className="text-red-500 text-sm">{errors.otp}</div>} */}
+                     
+                      <label className="w-full">
+                  <div className="label">
+            <span className="label-text">Enter OTP ?</span>
+          </div>
+          <label className="input input-bordered input-accent flex items-center gap-2">
+                  <RiLockPasswordLine />
+            <input
+              name="otp"
+              placeholder={"Ex- 123456"}
+              value={loginObj.otp}
+                  onChange={(e) =>
+                updateFormValue({
+                  updateType: "otp",
+                  value: e.target.value,
+                })
+              }
+              className="grow"
+            />
+        
+            
+          </label>
+          {/* {errors.otp && <p className="text-red-500 text-sm">{errors.otp}</p>} */}
+        </label>
                 </div>
               )}
-            </div>
+
+        
 
             <div className={`${isSignIn ? "mt-6" : "mt-6"} text-rose-500`}>
               {errorMessage}
@@ -759,7 +799,14 @@ useEffect(() => {
                 </div>
               </div>
             )}
+
+
+
+      {/* this is under the form directly */}
+      </div>
           </form>
+
+
         </div>
 
 
@@ -911,7 +958,7 @@ useEffect(() => {
               type="text"
               className="grow"
               placeholder="Enter OTP"
-              value={otp}
+              value={loginObj.otp}
               onChange={(e) => setOtp(e.target.value)}
             />
           </label>

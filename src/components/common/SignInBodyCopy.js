@@ -9,7 +9,6 @@ import analyticsUtil from "@/utils/analyticsUtil";
 import { SIGN_UP_IMAGES } from "@/utils/globalConstantUtil";
 import { ModalWrapper } from "@/components/common/ModalWrapper";
 import { useRouter } from "next/navigation";
-import * as Yup from "yup";
 
 function SignInBody({ closeModal, extraObject }) {
   
@@ -34,7 +33,7 @@ function SignInBody({ closeModal, extraObject }) {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [loginObj, setLoginObj] = useState(INITIAL_REGISTER_OBJ);
-const [errors, setErrors] = useState({});
+
   const openSignUp = () => {
     // dispatch(closeModal())
     // closeModal();
@@ -42,20 +41,17 @@ const [errors, setErrors] = useState({});
   };
 
   const openSignIn = () => {
-    // dispatch(
-    
-    // );
+    dispatch(
+      openModal({
+        title: "",
+        size: "lg",
+        bodyType: MODAL_BODY_TYPES.SIGN_IN_MODAL,
+        extraObject: { isSignIn: true  },
+      })
+    );
     router.push("/sign-in");
   };
 
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),}
-  )
   // useEffect(() => {
   //    if(loginObj.otp.length > 2){
   //             console.log(loginObj)
@@ -65,7 +61,15 @@ const [errors, setErrors] = useState({});
 
   const submitSingInForm = async (e) => {
     setErrorMessage("");
-     setErrors({})
+    if (loginObj.email.trim() === "")
+      return setErrorMessage("Email Id is Required!");
+    if (loginObj.password.trim() === "")
+      return setErrorMessage("password is Required!");
+    // if (loginObj.otp.trim() === "")
+    //   return setErrorMessage("Verification Code is Required!");
+    else if (!/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(loginObj.email.trim())) {
+      return setErrorMessage("Email is Wrong!");
+    } else {
       setLoading(true);
       const userDatao = {
         // name: "ahmed or john",
@@ -74,10 +78,6 @@ const [errors, setErrors] = useState({});
         // code:loginObj.otp,
       };
       try {
-
-        await validationSchema.validate(userDatao, {
-          abortEarly: false,
-        })
         const response = await axios.post(
           "http://127.0.0.1:8000/auth/login/",
           userDatao
@@ -100,33 +100,22 @@ const [errors, setErrors] = useState({});
           setErrorMessage(response.data.message);
         }
       } catch (error) {
-        if(error.name === 'ValidationError'){
-          const newErrors = {}
-          error.inner.forEach((error) => {
-            newErrors[error.path] = error.message
-          })
-          setErrors(newErrors)
-        }else{
-
-          if (error.response) {
-            // Server responded with a status other than 2xx
+        if (error.response) {
+          // Server responded with a status other than 2xx
           console.error("Error response1:", error.response.data);
-        alert(error.response.data.message);
-      } else if (error.request) {
-        // Request was made but no response received
-      console.error("Error request2:", error.request);
-    alert("No response received from the server");
-  } else {
-    // Something happened in setting up the request
-  console.error("Error message3:", error.message);
-alert("Error in setting up the request");
-}
-}
-} finally{
-  
-  setLoading(false);
-  }
-// setIsOtpSent(true);
+          alert(error.response.data.message);
+        } else if (error.request) {
+          // Request was made but no response received
+          console.error("Error request2:", error.request);
+          alert("No response received from the server");
+        } else {
+          // Something happened in setting up the request
+          console.error("Error message3:", error.message);
+          alert("Error in setting up the request");
+        }
+      }
+      setLoading(false);
+      // setIsOtpSent(true);
 
       // let response = await axios.post(process.env.NEXT_PUBLIC_BASE_URL+'/user/verifyMailOTP', loginObj)
       //   if (response.data.success) {
@@ -145,7 +134,7 @@ alert("Error in setting up the request");
       //     setErrorMessage(response.data.message);
       //   }
       //   setLoading(false);
-    
+    }
   };
 
   const submitForm = async (e) => {
@@ -183,7 +172,6 @@ alert("Error in setting up the request");
 
   const updateFormValue = ({ updateType, value }) => {
     setErrorMessage("");
-    setErrors({})
     setLoginObj({ ...loginObj, [updateType]: value });
   };
 
@@ -240,7 +228,6 @@ alert("Error in setting up the request");
         <div className="md:p-10 pb-12">
           <form onSubmit={(e) => submitForm(e)}>
             <div className="mb-4">
-              
               {!isOtpSent && (
                 <p className="text-center md:mt-0 mt-6 text-xl mb-4 font-semibold">
                   {/* {isSignIn ? "Sign In" : "Sign Up"} */}
@@ -250,7 +237,7 @@ alert("Error in setting up the request");
 
               {!isOtpSent && (
                 <>
-                  {/* <div className={`form-control w-full mt-8`}>
+                  <div className={`form-control w-full mt-8`}>
                     <label className="label">
                       <span
                         className={
@@ -272,10 +259,9 @@ alert("Error in setting up the request");
                       }
                       className="input  input-bordered input-primary w-full "
                     />
-                      {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-                  </div> */}
+                  </div>
 
-                  {/* <div className={`form-control w-full mt-2`}>
+                  <div className={`form-control w-full mt-2`}>
                     <label className="label">
                       <span
                         className={
@@ -297,62 +283,7 @@ alert("Error in setting up the request");
                       }
                       className="input  input-bordered input-primary w-full "
                     />
-                      {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
-                  </div> */}
-
-                {/* Email */}
-            <label className="w-full ">
-          <div className="label">
-            <span className="label-text ">What is your email?</span>
-          </div>
-          <label className="input input-bordered input-accent 
-                  flex items-center gap-2 mx-auto">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
-              <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
-              <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
-            </svg>
-            <input
-              type="text"
-              className="grow "
-              value={loginObj.email}
-              placeholder={"Ex- name@gmail.com"}
-              onChange={(e) =>
-                updateFormValue({
-                  updateType: "email",
-                  value: e.target.value,
-                })
-              }
-            />
-          </label>
-          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-            </label>
-
-
-                       {/* Password */}
-        <label className="w-full">
-          <div className="label">
-            <span className="label-text">What is your password?</span>
-          </div>
-          <label className="input input-bordered input-accent flex w-full items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
-              <path fillRule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clipRule="evenodd" />
-            </svg>
-            <input
-              type="password"
-              className="input-info grow"
-              placeholder="Password"
-              name="password"
-              value={loginObj.password}
-                  onChange={(e) =>
-                updateFormValue({
-                  updateType: "password",
-                  value: e.target.value,
-                })
-              }
-            />
-          </label>
-          {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
-        </label>
+                  </div>
                 </>
               )}
             </div>
