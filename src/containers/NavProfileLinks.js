@@ -70,7 +70,7 @@ function NavProfileLinks() {
                     console.log (user)
                 }, 4000)
                 dispatch(setLoggedIn(false));
-                // window.location = '/';
+                window.location = '/';
             // }
         // } catch (error) {
             // console.log(error);
