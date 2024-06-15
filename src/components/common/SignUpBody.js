@@ -151,6 +151,8 @@ function SignUpBody({ closeModal, extraObject }) {
 
           setLoading(false);
           dispatch(setLoggedIn(true));
+         
+          dispatch(setToken(response.data.token));
           setIsOtpSent(true);
             setMessageToast("Email verified successfully !");
           setShowToast(true);

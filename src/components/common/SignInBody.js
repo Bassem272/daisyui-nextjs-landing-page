@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
+import { useDispatch , useSelector} from "react-redux";
 import { closeModal, openModal } from "@/store/modalSlice";
 import { MODAL_BODY_TYPES } from "@/utils/globalConstantUtil";
-import { setCredits, setLoggedIn, setToken } from "@/store/userSlice";
+import { fetchUserDetail, setCredits, setLoggedIn, setToken } from "@/store/userSlice";
 import analyticsUtil from "@/utils/analyticsUtil";
 import { SIGN_UP_IMAGES } from "@/utils/globalConstantUtil";
 import { ModalWrapper } from "@/components/common/ModalWrapper";
@@ -23,6 +23,8 @@ function SignInBody({ closeModal, extraObject }) {
   
   const dispatch = useDispatch();
 
+  const user = useSelector((state) => state.user);
+
   useEffect(() => {
     setLoading(false);
     setIsOtpSent(false);
@@ -34,7 +36,10 @@ function SignInBody({ closeModal, extraObject }) {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [loginObj, setLoginObj] = useState(INITIAL_REGISTER_OBJ);
-const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({});
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+
   const openSignUp = () => {
     // dispatch(closeModal())
     // closeModal();
@@ -54,8 +59,15 @@ const [errors, setErrors] = useState({});
       .required("Email is required"),
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),}
+      .required("Password is required"),
+    }
   )
+
+  useEffect(() => {
+    console.log("isLoggedIn changed:", user.isLoggedIn);
+    console.log("user when changed :", user);
+}, [user.isLoggedIn, user]);
+
   // useEffect(() => {
   //    if(loginObj.otp.length > 2){
   //             console.log(loginObj)
@@ -88,14 +100,19 @@ const [errors, setErrors] = useState({});
         if (response.data.message === "Authentication successful") {
           alert("Authentication successful");
           setLoading(false);
-          dispatch(setLoggedIn(true));
-          
-          console.log(response.data.token)
-          
-          dispatch(setToken(response.data.token));
+         
           setIsOtpSent(true);
           setShowToast(true);
-          console.log("email verified now");
+          setToastMessage("Login successful");
+          setShowToast(true);
+          dispatch(fetchUserDetail({email: loginObj.email, password: loginObj.password}));
+          dispatch(setLoggedIn(true));
+          dispatch(setToken(response.data.token));
+          setTimeout(() => {
+            router.push("/");
+            console.log("user at signIN:", user);
+          }, 3000);
+          console.log("user at signIN:", user);
         } else {
           setErrorMessage(response.data.message);
         }
@@ -161,10 +178,10 @@ alert("Error in setting up the request");
 
   //   this is working function
   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>timer >>>>>>>
-  const [showToast, setShowToast] = useState(false);
+
 
   useEffect(() => {
-    if (isOtpSent) {
+    if (showToast) {
       setShowToast(true);
 
       const timer = setTimeout(() => {
@@ -174,7 +191,7 @@ alert("Error in setting up the request");
       // Cleanup the timer if the component unmounts or isOtpSent changes
       return () => clearTimeout(timer);
     }
-  }, [isOtpSent]);
+  }, [showToast]);
 
   const accept = () => {
     // setIsOtpSent(false);

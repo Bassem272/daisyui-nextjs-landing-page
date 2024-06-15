@@ -6,18 +6,24 @@ import { fetchUserDetail, setLoggedIn } from "@/store/userSlice"
 import { useEffect } from "react"
 import CircleStackIcon from '@heroicons/react/24/outline/CircleStackIcon'
 import { useRouter } from "next/router"
+import axios from "axios"
 
 function NavProfileLinks() {
 
     const router = useRouter()
     const dispatch = useDispatch()
-    const {isLoggedIn, credits, token} = useSelector(state => state.user)
-
+    const user = useSelector(state => state.user)
+    const { isLoggedIn, email, password , credits} = user
     useEffect(() => {
-        if(token){
-            dispatch(fetchUserDetail())
+        if (isLoggedIn) {
+            dispatch(fetchUserDetail({ email: email, password: password }));
         }
-    }, [token])
+    }, [dispatch, email, password, isLoggedIn]); // Include all dependencies here
+  
+    useEffect(() => {
+        console.log("isLoggedIn from navbar", user.isLoggedIn);
+        console.log("user when from navbar :", user);
+    }, [user.isLoggedIn, user]);
 
     const openLoginModal = () =>{
         router.push('/sign-in')
@@ -30,14 +36,49 @@ function NavProfileLinks() {
         dispatch(openModal({title : "", size:"lg",  bodyType : MODAL_BODY_TYPES.PRICING_MODAL, extraObject : {isLoggedIn, darkbg : true}}))
     }
 
-    const logoutUser = async() => {
-        // await axios.get(process.env.NEXT_PUBLIC_BASE_URL+'/user/logout')
-        localStorage.clear();
-        dispatch(setLoggedIn(false))
-        window.location = '/'
-    }
+    // const logoutUser = async() => {
+    //     try{
+    //             console.log(email,password)
+    //       const response =  await axios.post("http://127.0.0.1:8000/auth/logout/", {
+    //             email,
+    //             password
+                
+    //         })
+    //         if(response.data.message === "Logout successful"){
+                
+    //             localStorage.clear();
+    //             dispatch(setLoggedIn(false))
+    //             window.location = '/'
+    //         }
+    //     } catch(error){
+    //         console.log(error)
+    //     }
+    //     }
 
-    const handleDropDownClick = () => {
+    const logoutUser = async () => {
+        // try {
+            // console.log(user)
+            // console.log(email);
+            const response = await axios.post("http://127.0.0.1:8000/auth/logout/", {
+                email:email,
+                password:password
+            });
+            // if (response.data.message === "Logout successful") {
+                localStorage.clear();
+                setTimeout(()=>{
+
+                    console.log (user)
+                }, 4000)
+                dispatch(setLoggedIn(false));
+                // window.location = '/';
+            // }
+        // } catch (error) {
+            // console.log(error);
+        // }
+    }
+    
+        
+        const handleDropDownClick = () => {
         const elem = document.activeElement;
         if(elem){
           elem?.blur();

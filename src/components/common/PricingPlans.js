@@ -59,7 +59,7 @@ function PricingPlans(){
         <>
         <div className="text-center  cursor-pointer text-xl mt-6" onClick={() => setToogleActive(!toggleActive)}>
                             <span className="align-top  mr-1">Monthly</span> 
-                            <input type="checkbox" className="toggle  toggle-primary" checked={toggleActive} />
+                            <input type="checkbox" className="toggle  toggle-primary" defaultChecked={toggleActive} />
                             <span className="align-top ml-2">Yearly</span>
         </div>
         <div className='grid md:grid-cols-3 grid-cols-1 mt-2 w-full gap-8'>

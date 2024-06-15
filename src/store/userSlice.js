@@ -29,7 +29,7 @@ export const fetchUserDetail = createAsyncThunk(
       "http://127.0.0.1:8000/auth/login/",
       credentials
     );
-    console.log(response);
+    // console.log(response);
     return response.data.user_data;
   }
 );
