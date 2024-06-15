@@ -29,7 +29,8 @@ export const fetchUserDetail = createAsyncThunk(
       "http://127.0.0.1:8000/auth/login/",
       credentials
     );
-    return response.data.payload;
+    console.log(response);
+    return response.data.user_data;
   }
 );
 
@@ -129,6 +130,7 @@ export const headerSlice = createSlice({
       state.isLoading = true;
     },
     [fetchUserDetail.fulfilled]: (state, action) => {
+      console.log(action)
       console.log(action.payload);
       const {
         credits,
