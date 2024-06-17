@@ -9,7 +9,7 @@ import FeatureSection from '@/components/home/FeatureSection'
 import PageMetaTags from '@/containers/PageMetaTags'
 import Pricing from '@/components/home/Pricing'
 import CTA2 from '@/components/home/CTA2'
-
+import Carousels from '@/components/home/carousels'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
@@ -21,6 +21,7 @@ export default function Home() {
       <meta itemProp="name" content="Web Design AI"/>
     </div>
         <Hero />
+        <Carousels />
         <GenerationStep />
         <FeatureSection showHeading={true} title="Feature title 1"/>
 

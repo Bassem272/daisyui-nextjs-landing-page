@@ -27,11 +27,11 @@ function Carousel2() {
   }, []);
 
   return (
-    <div className="App bg-blue-500">
-      <div className="max-w-lg mx-auto">
-        <div className="relative overflow-hidden" style={{ width: "300px", height: "400px" }}>
+    <div className="App bg-blue-500 round-box">
+      <div className="max-w-lg mx-auto round-box">
+        <div className="relative overflow-hidden round-box" style={{ width: "300px", height: "400px" }}>
           <div
-            className="flex transition-transform ease-out duration-500"
+            className="flex transition-transform ease-out duration-500 round-box"
             style={{ transform: `translateX(-${curr * 100}%)`, width: "100%", height: "100%" }}
           >
             {/* Render the images */}
@@ -40,7 +40,7 @@ function Carousel2() {
                 key={index}
                 src={s}
                 alt="carousel"
-                className="object-cover"
+                className="object-cover "
                 style={{ width: "100%", height: "100%" }}
               />
             ))}
