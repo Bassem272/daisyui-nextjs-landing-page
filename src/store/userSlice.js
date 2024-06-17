@@ -143,9 +143,11 @@ export const headerSlice = createSlice({
         grade,
         contacts,
         courses,
+        password,
       } = action.payload;
       state.credits = credits;
       state.name = name;
+      state.password = password;
       state.email = email;
       state.grade = grade;
       state.avatar_url = avatar_url;

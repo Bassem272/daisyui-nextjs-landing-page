@@ -13,13 +13,24 @@ function NavProfileLinks() {
     const router = useRouter()
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
-    const { isLoggedIn, email, password , credits} = user
-    useEffect(() => {
-        if (isLoggedIn) {
-            dispatch(fetchUserDetail({ email: email, password: password }));
-        }
-    }, [dispatch, email, password, isLoggedIn]); // Include all dependencies here
+   
+    const email = user.email
+    const password = user.password
+    const isLoggedIn = user.isLoggedIn
+    const credits = user.credits
+    console.log("credits",credits)
+    console.log("isLoggedIn",isLoggedIn)
+    console.log("email",email)
+    console.log("password",password)
+    // useEffect(() => {
+    //     if (isLoggedIn) {
+    //         dispatch(fetchUserDetail({ email: email, password: password }));
+    //     }
+    // }, [dispatch, email, password, isLoggedIn]); // Include all dependencies here
   
+
+
+    
     useEffect(() => {
         console.log("isLoggedIn from navbar", user.isLoggedIn);
         console.log("user when from navbar :", user);
@@ -36,54 +47,79 @@ function NavProfileLinks() {
         dispatch(openModal({title : "", size:"lg",  bodyType : MODAL_BODY_TYPES.PRICING_MODAL, extraObject : {isLoggedIn, darkbg : true}}))
     }
 
-    // const logoutUser = async() => {
-    //     try{
-    //             console.log(email,password)
-    //       const response =  await axios.post("http://127.0.0.1:8000/auth/logout/", {
-    //             email,
-    //             password
+    const logoutUser = async() => {
+        try{
+                console.log(email,password)
+          const response =  await axios.post("http://127.0.0.1:8000/auth/logout/", {
+                email,
+                password
                 
-    //         })
-    //         if(response.data.message === "Logout successful"){
+            })
+            if(response.data.message === "Logout successful"){
                 
-    //             localStorage.clear();
-    //             dispatch(setLoggedIn(false))
-    //             window.location = '/'
-    //         }
-    //     } catch(error){
-    //         console.log(error)
-    //     }
-    //     }
-
-    const logoutUser = async () => {
-        // try {
-            // console.log(user)
-            // console.log(email);
-            const response = await axios.post("http://127.0.0.1:8000/auth/logout/", {
-                email:email,
-                password:password
-            });
-            // if (response.data.message === "Logout successful") {
                 localStorage.clear();
-                setTimeout(()=>{
-
-                    console.log (user)
-                }, 4000)
-                dispatch(setLoggedIn(false));
-                window.location = '/';
-            // }
-        // } catch (error) {
-            // console.log(error);
-        // }
-    }
-    
-        
-        const handleDropDownClick = () => {
-        const elem = document.activeElement;
-        if(elem){
-          elem?.blur();
+                dispatch(setLoggedIn(false))
+                window.location = '/'
+                console.log(user.email)
+            }
+        } catch(error){
+            console.log(error)
         }
-      };
+        }
+
+    // const logoutUser = async () => {
+    //     // try {
+    //         // console.log(user)
+    //         // console.log(email);
+    //         const response = await axios.post("http://127.0.0.1:8000/auth/logout/", {
+    //             email:email,
+    //             password:password
+    //         });
+    //         // if (response.data.message === "Logout successful") {
+    //             localStorage.clear();
+    //             setTimeout(()=>{
+
+    //                 console.log (user)
+    //             }, 4000)
+    //             dispatch(setLoggedIn(false));
+    //             window.location = '/';
+    //         // }
+    //     // } catch (error) {
+    //         // console.log(error);
+    //     // }
+    // }
+    
+  //   const logoutUser = async (user.email, password) => {
+  //       // dispatch(setLoggedIn(false));
+    
+  //      // Debugging: Log the email and password to verify their structure
+  // console.log('Email:', email);
+  // console.log('Password:', password);
+  //       try {
+  //         const response = await axios.post("http://127.0.0.1:8000/auth/logout/", {
+  //           email: email
+  //           // ,
+  //           // password: password
+  //         });
+      
+  //         if (response.data.message === "Logout successful") {
+  //           localStorage.clear();
+  //           dispatch(setLoggedIn(false));
+  //           window.location = '/';
+  //         } else {
+  //           console.error('Logout failed:', response.data);
+  //         }
+  //       } catch (error) {
+  //         console.error('An error occurred during logout:', error);
+  //       }
+  //     };
+        
+  //       const handleDropDownClick = () => {
+  //       const elem = document.activeElement;
+  //       if(elem){
+  //         elem?.blur();
+  //       }
+  //     };
 
     return(
         <>  
