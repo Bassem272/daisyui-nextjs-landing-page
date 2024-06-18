@@ -49,10 +49,10 @@ function NavProfileLinks() {
 
     const logoutUser = async() => {
         try{
+          // dispatch(setLoggedIn(false))
                 console.log(email,password)
           const response =  await axios.post("http://127.0.0.1:8000/auth/logout/", {
-                email,
-                password
+                email
                 
             })
             if(response.data.message === "Logout successful"){
