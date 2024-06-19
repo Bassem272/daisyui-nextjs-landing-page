@@ -1,3 +1,6 @@
+// ./tailwind.config.js
+const daisyui = require('daisyui');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -8,10 +11,14 @@ module.exports = {
     // Or if using `src` directory:
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  // darkMode: 'class', // Enable dark mode with utility classes
   theme: {
     extend: {},
   },
-  plugins: [require("@tailwindcss/typography"), require("daisyui")],
+  plugins: [require("@tailwindcss/typography"), daisyui
+    
+  ], 
+  // rtl: true, // Enable RTL support
   daisyui: {
     themes: ["light","luxury"],
   },

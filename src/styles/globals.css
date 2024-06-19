@@ -1,6 +1,6 @@
-@import 'tailwindcss/base';
+/* @import 'tailwindcss/base';
 @import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import 'tailwindcss/utilities'; */
 
 
 .compareImg{
@@ -34,3 +34,59 @@ body{
   }
 
 
+/* styles/globals.css */
+
+html[dir="rtl"] {
+    direction: rtl;
+  }
+  
+  body[dir="rtl"] {
+    text-align: right;
+  }
+  
+
+  @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Your custom CSS styles
+.compareImg {
+  height: 300px;
+}
+
+body {
+  color: #252524 !important;
+}
+
+.btn-primary {
+  color: white !important;
+  background-color: #16564d;
+}
+
+.btn-outline:hover {
+  background-color: #16564d;
+}
+
+.menu li > *:not(ul):not(.menu-title):not(details).active {
+  color: white !important;
+  background: #e8b333;
+}
+
+/* Custom scrollbar-hidden class */
+/* .scrollbar-hidden {
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  /* scrollbar-width: none; for Firefox */
+/* }
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+/* }  */
+
+/* RTL Styles */
+/* html[dir="rtl"] {
+  direction: rtl;
+}
+
+body[dir="rtl"] {
+  text-align: right;
+} */ 

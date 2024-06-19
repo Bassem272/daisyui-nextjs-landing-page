@@ -1,6 +1,6 @@
 // src/containers/Navlinks.js
 import Link from 'next/link'
-
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 
 function Navlinks(){
     return(
@@ -13,6 +13,7 @@ function Navlinks(){
             <li className="mr-2"><Link href="/videos">Videos</Link></li>
             <li className="mr-2"><Link href="/contact-us">Contact Us</Link></li>
             <li className="mr-2"><Link href="/start-designing">Start Designing</Link></li>
+            <li className="mr-2"><LanguageSwitcher /></li>
         </>
     )
 }

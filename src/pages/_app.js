@@ -10,8 +10,11 @@ import { GoogleAnalytics } from "nextjs-google-analytics"
 import mixpanel from 'mixpanel-browser';
 import { Crisp } from "crisp-sdk-web";
 import TagManager from 'react-gtm-module'
+import { appWithTranslation } from 'next-i18next';
+import LanguageSwitcher from '../components/LanguageSwitcher';
+import { LanguageProvider } from '../../context/LanguageContext';
 
-export default function App({ Component, pageProps }) {
+ function App({ Component, pageProps }) {
   
     useEffect(() => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -27,10 +30,15 @@ export default function App({ Component, pageProps }) {
 
   return (
       <Provider store={store}>
+         <LanguageProvider>
           <Layout>
               <GoogleAnalytics trackPageViews />
+             
               <Component {...pageProps} />
           </Layout>
+          </LanguageProvider>
       </Provider>
   )
 }
+
+export default appWithTranslation(App);
