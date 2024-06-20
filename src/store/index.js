@@ -33,9 +33,10 @@ const combinedReducer = {
 }
 
 // Configure the store with the combined reducers, initial state from localStorage, and middleware
-export default configureStore({
+const store = configureStore({
   reducer: combinedReducer,
   preloadedState: reHydrateStore(), // Load initial state from localStorage
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(localStorageMiddleware), // Add custom middleware
 })
+export default  store;

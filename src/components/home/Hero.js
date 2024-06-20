@@ -203,6 +203,7 @@ function Hero() {
       <div className="hero-content md:px-0 px-4 max-w-6xl flex-col lg:flex-row-reverse">
         {/* Your carousel or image */}
         <Carousel2 />
+        <Carousel2 />
         <div>
           <h1 className="text-5xl text-slate-100 font-bold md:leading-none leading-tight md:mt-0 mt-10">
             <FormattedMessage id="hero.title" defaultMessage="Master Programming">

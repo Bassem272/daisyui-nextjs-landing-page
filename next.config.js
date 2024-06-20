@@ -25,10 +25,7 @@ const localeSubpaths = {
 };
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // rewrites: async () => nextI18NextRewrites(localeSubpaths),
-  // publicRuntimeConfig: {
-  //   localeSubpaths,
-  // },
+
   reactStrictMode: false,
   i18n,
 };

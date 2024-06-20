@@ -214,30 +214,34 @@ export const fetchUserDetail = createAsyncThunk(
   }
 );
 
+const initialState = {
+  pageTitle: "User",
+  credits: 0,
+  name: "",
+  email: "",
+  grade: "",
+  avatar_url: "",
+  user_id: "",
+  isLoggedIn: false,
+  token: null,
+  created_at: null,
+  theme:"light",
+  language: "en", // user preference
+  notificationsEnabled: true, // user preference
+  role: "user", // user role
+  lastLogin: null, // user activity
+  currentChatRoom: null, // chat specific data
+  unreadMessages: 0, // chat specific data
+  contacts: [], // user contacts
+  courses: [], // user courses
+  scrollId: new Date().getTime(),
+}
+// Check if window is defined before using localStorage
+
+
 export const headerSlice = createSlice({
   name: "user",
-  initialState: {
-    pageTitle: "User",
-    credits: 0,
-    name: "",
-    email: "",
-    grade: "",
-    avatar_url: "",
-    user_id: "",
-    isLoggedIn: false,
-    token: null,
-    created_at: null,
-    theme: "light", // user preference
-    language: "en", // user preference
-    notificationsEnabled: true, // user preference
-    role: "user", // user role
-    lastLogin: null, // user activity
-    currentChatRoom: null, // chat specific data
-    unreadMessages: 0, // chat specific data
-    contacts: [], // user contacts
-    courses: [], // user courses
-    scrollId: new Date().getTime(),
-  },
+  initialState,
   reducers: {
     setGrade: (state, action) => {
       state.grade = action.payload;
@@ -274,6 +278,9 @@ export const headerSlice = createSlice({
     },
     setTheme: (state, action) => {
       state.theme = action.payload;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("theme", action.payload);
+      }
     },
     setLanguage: (state, action) => {
       state.language = action.payload;
@@ -327,6 +334,8 @@ export const headerSlice = createSlice({
       state.contacts = contacts;
       state.lastLogin = lastLogin;
       state.isLoading = false;
+       // Save user data to localStorage
+       localStorage.setItem('user', JSON.stringify(action.payload));
     },
     [fetchUserDetail.rejected]: (state) => {
       state.isLoading = false;

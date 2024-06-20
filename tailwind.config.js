@@ -20,6 +20,6 @@ module.exports = {
   ], 
   // rtl: true, // Enable RTL support
   daisyui: {
-    themes: ["light","luxury"],
+    themes: ["light","luxury" ,"dark", "cupcake", "bumblebee"],
   },
 }

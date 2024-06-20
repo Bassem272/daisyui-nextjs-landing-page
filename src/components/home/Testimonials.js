@@ -12,10 +12,68 @@ function Testimonials(){
 
     return(
         <>
+        <div className="collapse collapse-plus bg-base-200">
+  <input type="radio" name="my-accordion-3" defaultChecked /> 
+  <div className="collapse-title text-xl font-medium">
+    Click to open this one and close others
+  </div>
+  <div className="collapse-content"> 
+    <p>hello</p>
+  </div>
+</div>
+<div className="collapse collapse-plus bg-base-200">
+  <input type="radio" name="my-accordion-3" /> 
+  <div className="collapse-title text-xl font-medium">
+    Click to open this one and close others
+  </div>
+  <div className="collapse-content"> 
+    <p>hello</p>
+  </div>
+</div>
+<div className="collapse collapse-plus bg-base-200">
+  <input type="radio" name="my-accordion-3" /> 
+  <div className="collapse-title text-xl font-medium">
+    Click to open this one and close others
+  </div>
+  <div className="collapse-content"> 
+    <p>hello</p>
+  </div>
+</div>
+
+<div className="join join-vertical w-full mx-5">
+  <div className="collapse collapse-arrow join-item border border-base-300">
+    <input type="radio" name="my-accordion-4" defaultChecked /> 
+    <div className="collapse-title text-xl font-medium">
+      Click to open this one and close others
+    </div>
+    <div className="collapse-content"> 
+      <p>hello</p>
+    </div>
+  </div>
+  <div className="collapse collapse-arrow join-item border border-base-300">
+    <input type="radio" name="my-accordion-4" /> 
+    <div className="collapse-title text-xl font-medium">
+      Click to open this one and close others
+    </div>
+    <div className="collapse-content"> 
+      <p>hello</p>
+    </div>
+  </div>
+  <div className="collapse collapse-arrow join-item border border-base-300">
+    <input type="radio" name="my-accordion-4" /> 
+    <div className="collapse-title text-xl font-medium">
+      Click to open this one and close others
+    </div>
+    <div className="collapse-content"> 
+      <p>hello</p>
+    </div>
+  </div>
+</div>
              <div className="grid place-items-center w-full ">
             <div className="max-w-6xl px-4 py-24 content-center justify-center">
                 <h1 className="text-3xl  text-center font-bold">Testimonials</h1>
                 <div className="grid mt-12 md:grid-cols-3 grid-cols-1 gap-8">
+                    
                 {
                     testimonialsData.map((t, k) => {
                         return(
