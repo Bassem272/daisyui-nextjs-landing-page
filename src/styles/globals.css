@@ -90,3 +90,8 @@ body {
 body[dir="rtl"] {
   text-align: right;
 } */ 
+/* Luxury Theme */
+[data-theme="luxury"] {
+  --text-color: #333;
+  --background-color: #f5f5f5; /* Example background color for luxury theme */
+}

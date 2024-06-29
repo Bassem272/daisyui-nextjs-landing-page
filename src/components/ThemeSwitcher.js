@@ -95,6 +95,18 @@ const ThemeSwitcher = () => {
         <li><button onClick={() => handleThemeChange('dark')}>Dark</button></li>
         <li><button onClick={() => handleThemeChange('luxury')}>Luxury</button></li>
         <li><button onClick={() => handleThemeChange('cupcake')}>Cupcake</button></li>
+        <li><button onClick={() => handleThemeChange('bumblebee')}>bumblebee</button></li>
+        <li><button onClick={() => handleThemeChange('dracula')}>dracula</button></li>
+        <li><button onClick={() => handleThemeChange('cmyk')}>cmyk</button></li>
+        <li><button onClick={() => handleThemeChange('autumn')}>autumn</button></li>
+        <li><button onClick={() => handleThemeChange('acid')}>acid</button></li>
+        <li><button onClick={() => handleThemeChange('lemonade')}>lemonade</button></li>
+        <li><button onClick={() => handleThemeChange('night')}>night</button></li>
+        <li><button onClick={() => handleThemeChange('coffee')}>coffee</button></li>
+        <li><button onClick={() => handleThemeChange('winter')}>winter</button></li>
+        <li><button onClick={() => handleThemeChange('dim')}>dim</button></li>
+        <li><button onClick={() => handleThemeChange('nord')}>nord</button></li>
+        <li><button onClick={() => handleThemeChange('sunset')}>sunset</button></li>
       </ul>
     </div>
   );
