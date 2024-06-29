@@ -53,6 +53,7 @@
 
 // export default JobArticle;
 
+// articles/[articleId].js
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import axios from 'axios';

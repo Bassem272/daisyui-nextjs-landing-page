@@ -1,0 +1,21 @@
+/* your-nextjs-project/
+├── pages/
+│   ├── api/
+│   │   ├── grades/
+│   │   │   ├── index.js
+│   │   │   ├── [gradeId]/
+│   │   │   │   ├── subjects/
+│   │   │   │   │   ├── index.js
+│   │   │   │   │   ├── [subjectId]/
+│   │   │   │   │   │   ├── articles/
+│   │   │   │   │   │   │   ├── index.js
+│   │   │   │   │   │   │   ├── [articleId].js
+│   ├── grades/
+│   │   ├── index.js
+│   │   ├── [gradeId]/
+│   │   │   ├── subjects/
+│   │   │   │   ├── index.js
+│   │   │   │   ├── [subjectId]/
+│   │   │   │   │   ├── articles/
+│   │   │   │   │   │   ├── index.js
+│   │   │   │   │   │   ├── [articleId].js */
