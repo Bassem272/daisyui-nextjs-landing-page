@@ -56,11 +56,12 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import Spinner from '@/components/spinner';
 const Job = () => {
   const router = useRouter();
   const { jobId } = router.query;
   const [job, setJob] = useState(null);
+  const [loading , setLoading ] = useState(true)
   console.log('jobId: jobjslool', jobId);
 
   useEffect(() => {
@@ -68,13 +69,15 @@ const Job = () => {
       axios.get(`/api/jobs/${jobId}`).then((response) => {
         setJob(response.data.job_data);
         console.log('Fetched job:', response.data.job_data);
+        setLoading(false)
       }).catch(error => {
         console.error('Error fetching the job:', error);
+        setLoading(false)
       });
     }
   }, [jobId]);
 
-  if (!job) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (loading) return <Spinner loading={loading} />
 
   return (
     <div className="p-6 bg-base-100 shadow-xl rounded-lg max-w-4xl mx-auto mt-5">

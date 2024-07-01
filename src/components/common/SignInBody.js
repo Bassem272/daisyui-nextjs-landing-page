@@ -10,7 +10,7 @@ import { SIGN_UP_IMAGES } from "@/utils/globalConstantUtil";
 import { ModalWrapper } from "@/components/common/ModalWrapper";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
-
+import Spinner from '@/components/spinner'
 function SignInBody({ closeModal, extraObject }) {
   
   const router = useRouter();
@@ -204,6 +204,7 @@ alert("Error in setting up the request");
     setLoginObj({ ...loginObj, [updateType]: value });
   };
 
+  if(loading) return <Spinner loading={loading} />;
   return (
     <div className=" flex items-center rounded-xl">
       <div className="grid grid-cols-1 md:grid-cols-2 w-full ">

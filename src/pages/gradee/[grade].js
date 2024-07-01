@@ -1,12 +1,12 @@
 // // pages/gradee/[grade].js
 // getServerSideProps is faster than router 
 import Chat from "../../components/ChatComponent"; // Ensure the path is correct
-import { useRouter } from 'next/router';
+import { useRoute , useState } from 'next/router';
+import Spinner from "@/components/spinner";
 const constant_grade = 'grade1'
 
-
 const GradeChatPage = ( {grade} ) => {
-
+const [loading, setLoading ] = useState(true) 
     // const routerr = useRouter();
     // const {grade } = routerr.query; // This will give you the grade parameter
     const effective_grade = grade || constant_grade;

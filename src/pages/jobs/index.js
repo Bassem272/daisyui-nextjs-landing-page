@@ -2,10 +2,10 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import Spinner from '@/components/spinner';
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
-
+  const [loading , setLoading ] = useState(true) 
   useEffect(() => {
     axios.get('/api/jobs')
     
@@ -21,12 +21,14 @@ const Jobs = () => {
             }
             });
         console.log(ids)
+        setLoading(false)
       })
       .catch((error) => {
         console.error('Error fetching the jobs:', error);
+        setLoading(false)
       });
-  }, []);
-
+    }, []);
+    if(loading ) return <Spinner loading={loading} />
   return (
     <div className="grid grid-cols-1 gap-4 p-4 mt-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
     {jobs && jobs.length > 0 ? (

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
-
+import Spinner from '@/components/spinner';
 const VideosPage = () => {
   const [grades, setGrades] = useState([]);
+  const [loading , setLoading ] = useState(true) 
 
   useEffect(() => {
     axios.get('/api/videos')
@@ -11,12 +12,14 @@ const VideosPage = () => {
         setGrades(response.data.grades);
         console.log(response.data.grades);
         // Do something with the grades
+        setLoading(false)
       })
       .catch(error => {
         console.error('Error fetching grades:', error);
+        setLoading(false)
       });
   }, []);
-
+   if (loading) return <Spinner loading={loading} />
   return (
     <div>
       <h1>Grades</h1>

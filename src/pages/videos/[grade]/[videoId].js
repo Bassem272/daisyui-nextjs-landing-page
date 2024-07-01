@@ -640,21 +640,23 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-
+import Spinner from '@/components/spinner'
 const VideoPage = () => {
   const router = useRouter();
   const { grade, videoId } = router.query;
   const [video, setVideo] = useState(null);
-
+ const [loading , setLoading] = useState(true)
   useEffect(() => {
     if (grade && videoId) {
       axios
         .get(`/api/videos/${grade}/${videoId}`)
         .then(response => {
           setVideo(response.data.video_data);
+          setLoading(false)
         })
         .catch(error => {
           console.error('Error fetching video:', error);
+          setLoading(false)
         });
     }
   }, [grade, videoId]);
@@ -745,7 +747,7 @@ const VideoPage = () => {
     }
   }, [video, initializePlayer]);
 
-  if (!video) return <div className="p-4">Loading...</div>;
+  if (loading) return <Spinner loading={loading} />;
 
   return (
     <div className="p-4 mx-auto max-w-screen-lg">

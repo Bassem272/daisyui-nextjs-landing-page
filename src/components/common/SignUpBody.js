@@ -341,8 +341,9 @@ useEffect(() => {
 
     <div className=" flex items-center rounded-xl">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 w-full ">
-
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 w-full "> */}
+      <div className="flex w-full ">
+{/* 
         <div className="text-center rounded-xl bg-slate-100 ">
           <div className="mt-10 md:mb-0 mb-10 inline-block">
             <span className="font-bold text-2xl">
@@ -386,12 +387,12 @@ useEffect(() => {
               })}
             </div>
           </div>
-        </div>
+        </div> */}
 
 
         {/* form >>>>>>>>> */}
        
-        <div className="p-12 md:p-10 pb-12 bg-red-300 ">
+        <div className="p-12 md:p-10 pb-12  mt-5  mb-5 mr-auto ml-auto shadow-xl">
           <form onSubmit={(e) => submitForm(e)}>
             <div className="mb-10">
 

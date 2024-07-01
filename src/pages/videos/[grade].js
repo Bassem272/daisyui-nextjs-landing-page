@@ -2,12 +2,12 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
-
+import Spinner from '@/components/spinner';
 const GradePage = () => {
   const router = useRouter();
   const { grade } = router.query;
   const [videos, setVideos] = useState([]);
-
+ const [loading , setLoading ] = useState(true) 
   useEffect(() => {
     if (grade) {
       axios.get(`/api/videos/${grade}`)
@@ -15,13 +15,15 @@ const GradePage = () => {
           console.log(response);
           // Assuming the response data contains an array of video objects
           setVideos(response.data.videos);
+          setLoading(false)
         })
         .catch(error => {
           console.error('Error fetching videos:', error);
+          setLoading(false)
         });
     }
   }, [grade]);
-
+  if (loading) return <Spinner loading={loading} />
   return (
     <div>
       <h1>{grade} <p className='ml-2 text-sm text-gray-500'>  Videos</p></h1>

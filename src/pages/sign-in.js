@@ -4,10 +4,12 @@ import SignUp from '../components/common/signUp'
 // import SignInModalBody from '@/components/common/SignInModalBody';
 import SignInBody from '../components/common/SignInBody';
 import { useDispatch, useSelector} from 'react-redux';
+import Spinner from '@/components/spinner';
 function Form2() {
     const [inputs, setInputs] = useState({});
     const [errors , setErrors] = useState({});
-
+    // const [loading , setLoading ] = useState(true)
+    const [loading, setLoading] = useState(false); // Initialize loading
        
     
     const handleChange = (event) => {
@@ -43,15 +45,27 @@ function Form2() {
      const handleSubmit = (event) => {
         event.preventDefault();
 
-        if(Object.values(errors).every(error => !error ) ){
-            alert("form submitted")
-            alert(inputs);
-            console.log(inputs)
-        }else{
-            alert(`{"please fill the form correctly" ${errors.age} and ${errors.username}`)
-        }
+        // if(Object.values(errors).every(error => !error ) ){
+        //     alert("form submitted")
+        //     alert(inputs);
+        //     console.log(inputs)
+        // }else{
+        //     alert(`{"please fill the form correctly" ${errors.age} and ${errors.username}`)
+        // }
         
-        console.log(errors)
+        // console.log(errors)
+        setLoading(true); // Set loading to true when form is submitted
+
+        // Simulate an async operation (e.g., API call)
+        setTimeout(() => {
+            if (Object.values(errors).every(error => !error)) {
+                alert("Form submitted");
+                console.log(inputs);
+            } else {
+                alert(`Please fill the form correctly. ${errors.age} and ${errors.username}`);
+            }
+            setLoading(false); // Set loading to false after the operation
+        }, 2000); // Simulate a delay
 
     
     }

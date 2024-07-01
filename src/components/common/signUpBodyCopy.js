@@ -10,7 +10,7 @@ import { SIGN_UP_IMAGES } from "@/utils/globalConstantUtil";
 import { ModalWrapper } from "@/components/common/ModalWrapper";
 import { useRouter } from "next/navigation";
 import * as Yup from 'yup';
-
+import Spinner from "../spinner";
 function SignUpBody({ closeModal, extraObject }) {
   
   const router = useRouter();
@@ -1063,7 +1063,7 @@ useEffect(() => {
       )}
 
 
-<div className="md:p-10 pb-12 bg-red-300">
+<div className="md:p-10 pb-12"> 
         <form onSubmit={(e) => submitForm(e)}>
         <div className="mb-10">
       {/* {!isOtpSent && (

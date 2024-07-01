@@ -1,21 +1,27 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import Spinner from '@/components/spinner';
 const Article = () => {
   const router = useRouter();
   const { gradeId, subjectId, articleId } = router.query;
   const [article, setArticle] = useState(null);
+  const [loading , setLoading] = useState(true)
 
   useEffect(() => {
     if (articleId) {
       axios.get(`/api/grades/${gradeId}/subjects/${subjectId}/articles/${articleId}`)
-        .then((response) => setArticle(response.data.article))
-        .catch((error) => console.error('Error fetching article:', error));
+      .then((response) => {setArticle(response.data.article)
+
+        setLoading(false)
+      })
+        .catch((error) => {console.error('Error fetching article:', error)
+          setLoading(false)
+        });
     }
   }, [gradeId, subjectId, articleId]);
-
-  if (!article) return <div>Loading...</div>;
+if (loading) return <Spinner loading={loading} />
+  // if (!article) return <div>Loading...</div>;
 
   return (
     // <div>

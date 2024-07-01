@@ -200,7 +200,7 @@ import { Crisp } from 'crisp-sdk-web';
 import TagManager from 'react-gtm-module';
 import { appWithTranslation } from 'next-i18next';
 import { LanguageProvider } from '../../context/LanguageContext';
-
+import Sidebar from '../components/sidebar'
 function App({ Component, pageProps }) {
   const [theme, setTheme] = useState('light');
   const [mounted, setMounted] = useState(false);
@@ -228,6 +228,7 @@ function App({ Component, pageProps }) {
     <Provider store={store}>
       <LanguageProvider>
         <Layout>
+        <Sidebar />
           <GoogleAnalytics trackPageViews />
           <Component {...pageProps} theme={theme} setTheme={setTheme} />
         </Layout>
